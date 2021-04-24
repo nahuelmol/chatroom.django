@@ -7,7 +7,7 @@ SECRET_KEY = '9i03(slfzo^4%=si+$1wi_9aq_c1jfbspo8t2vjgthwg4ef28z'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.103','localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,14 +74,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE   = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE       = 'UTC'
 
-USE_I18N = True
+USE_I18N        = True
 
-USE_L10N = True
+USE_L10N        = True
 
-USE_TZ = True
+USE_TZ          = True
 
-STATIC_URL = '/static/'
+STATIC_URL      = '/static/'
+
+CHANNEL_LAYERS  = {
+    "default":{ "BACKEND":"channels.layers.InMemoryChannelLayer"}
+    }
