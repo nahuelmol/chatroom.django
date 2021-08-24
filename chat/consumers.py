@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -7,6 +8,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		self.room_name 			= self.scope['url_route']['kwargs']['room_name']
 		self.room_group_name	='chat_%s' % self.room_name
 
+		print('you are connected to '+' '+self.room_group_name+' room group')
+		
 		await self.channel_layer.group_add (
 			self.room_group_name,
 			self.channel_name
@@ -27,25 +30,32 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 			self.channel_name
 			)
 
-
 	async def receive(self, text_data):
 		text_data_json	= json.loads(text_data)
+		result 			= datetime.datetime.now()
+
 		message 		= text_data_json['message']
 		username		= text_data_json['username']
+		email			= text_data_json['email']
+		time			= str(result.hour) +':'+str(result.minute)
+
+		print('time: '+time)
 
 		await self.channel_layer.group_send (
 			self.room_group_name,
-			{'type':'chatroom_message','message':message,'username':username}
+			{'type':'chatroom_message','message_event':message,'username_event':username,'time_event':time}
 			)
 
 	async def chatroom_message(self, event):
-		message = event['message'] #we collect the message event from the group (inside of receive function)
-		user_username = event['username'] #we collect the username too
+		message 		= event['message_event'] #we collect the message event from the group (inside of receive function)
+		user_username 	= event['username_event'] #we collect the username too
+		time_message 	= event['time_event']
 
 		#then we send the info
 		await self.send(text_data=json.dumps({
-			'message':message,
-			'user_username':user_username
+			'message_to_group':message,
+			'user_username_':user_username,
+			'time_of_message':time_message
 			}))
 	
 

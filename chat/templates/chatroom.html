@@ -9,20 +9,23 @@
 </head>
 <body>
 	<div class="content " >
-		<textarea id="chat-text" cols="80" rows="30"></textarea></br>
+		<textarea id="chat-text" cols="60" rows="15">
+		</textarea></br>
 		<input id="input" type="text" size="80"></br>
 		<input id="submit" type="button" value="Send">
 	</div>
-	
 
-	{{ room_name|json_script:"room-name" }}
+	{{ room__name|json_script:"room-name" }}
 	{{ request.user.username|json_script:"user-username" }}
+	{{ request.user.email|json_script:"user-email"}}
 
 	<script type="text/javascript">
 	var local_host 	= window.location.host;
 	var red_host 	= '192.168.0.103:8080';
+
 	const roomName 		=JSON.parse(document.getElementById('room-name').textContent);
 	const user_username =JSON.parse(document.getElementById('user-username').textContent);
+	const user_email	=JSON.parse(document.getElementById('user-email').textContent);
 
 	document.querySelector('#submit').onclick = function (e) {
 		const messageInputDom 	= document.querySelector('#input');
@@ -30,20 +33,21 @@
 
 		chatSocket.send(JSON.stringify({
 			'message':message,
-			'username':user_username
+			'username':user_username,
+			'email':user_email
 		}));
+
 		messageInputDom.value = '';
 	}
 
 	const chatSocket 	= new WebSocket(
-
 		'ws://'+ local_host + '/ws/chat/'+ roomName + '/');
 	
 	chatSocket.onmessage= function (e){
 		const data 		= JSON.parse(e.data);
-		console.log(data);
-		//document.querySelector('#user-hello').innerHTML =  (data.tester);
-		document.querySelector('#chat-text').value 		+= (data.user_username +'\n'+data.message + '\n');
+		const username 	= data.user_username_ + ' says'
+
+		document.querySelector('#chat-text').value 		+= (username +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
 	}
 
 	</script>
