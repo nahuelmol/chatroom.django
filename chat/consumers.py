@@ -7,10 +7,15 @@ from comparator.generator import word_generator
 class Counter:
 	def __init__(self,count):
 		self._count = count
-	def returning(self):
+
+        def monitor(self):
+                printf('users connected: '+ str(self._count))
+
+	def more(self):
 		self._count = self._count + 1
 
-		print('users connected: '+ str(self._count))
+        def less(self):
+                self._count = self._count - 1     
 
 my_counter = Counter(0)
 
@@ -18,7 +23,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
 	async def connect(self):
 		
-		my_counter.returning()
+		my_counter.more()
+                my_counter.monitor()
 
 		self.room_name 			= self.scope['url_route']['kwargs']['room_name']
 		self.room_group_name	='chat_%s' % self.room_name
@@ -46,6 +52,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 			self.room_group_name,
 			self.channel_name
 			)
+                counter.less()
+                counter.monitor()
 
 	######################################################################
 	async def receive(self, text_data):
