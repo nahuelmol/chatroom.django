@@ -1,8 +1,8 @@
 # Chatroom
 <div>
-  <img src="https://img.shields.io/github/last-commit/nahuelmol/patitas"/>
-  <img src="https://img.shields.io/github/languages/code-size/nahuelmol/patitas"/>
-  <img src="https://img.shields.io/github/languages/top/nahuelmol/patitas"/>
+  <img src="https://img.shields.io/github/last-commit/nahuelmol/chatroom.django"/>
+  <img src="https://img.shields.io/github/languages/code-size/nahuelmol/chatroom.django"/>
+  <img src="https://img.shields.io/github/languages/top/nahuelmol/chatroom.django"/>
 </div>
 
 ## Goal
