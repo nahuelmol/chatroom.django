@@ -18,7 +18,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'chat',
-    'comparator'
+    'comparator',
+    'mytests',
+    'db'
 ]
 
 MIDDLEWARE = [
