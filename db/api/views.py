@@ -8,8 +8,8 @@ class EventsView(viewsets.ViewSet):
 
 	@action(detail=True, methods=['get'])
 	@staticmethod
-	def retrieve(self):
-		queryset		= Event.objects.all()
+	def retrieve(self, event_id):
+		queryset		= Event.objects.all(pk=event_id)
 		serialized		= EventSerializer(queryset, many=True)
 
 		return Response(serialized.data)
@@ -24,12 +24,14 @@ class EventsView(viewsets.ViewSet):
 
     @action(detail=True, methods=['get'])
 	def user_events_list(self, user_id):
-		queryset		= Event.objects.all()
+		#this contains all the event related with an specific user
+		queryset		= Event.objects.all(foreign_key=user_id)
 		serialized		= EventSerializer[queryset, many=True]
 
 		return Response(serialized.data)
 
-	def mylist():
+	def date_list(self, date):
+		#just contains all events in an specific date
 		queryset		= Event.objects.all()
 		serialized		= EventSerializer[queryset, many=True]
 

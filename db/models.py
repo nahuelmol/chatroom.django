@@ -1,3 +1,10 @@
 from django.db import models
 
-# Create your models here.
+class Event(models.Model):
+
+	name			= models.CharField(max_length=30)
+	user_asociated	= models.ManyToManyField()
+	date_created	= models.IntegerField()
+	date_to_launch	= models.IntegerField()
+	description		= models.TextField(max_length=60)
+
