@@ -25,14 +25,14 @@ class EventsView(viewsets.ViewSet):
     @action(detail=True, methods=['get'])
 	def user_events_list(self, user_id):
 		#this contains all the event related with an specific user
-		queryset		= Event.objects.all(foreign_key=user_id)
+		queryset		= Event.objects.get(foreign_key=user_id)
 		serialized		= EventSerializer[queryset, many=True]
 
 		return Response(serialized.data)
 
 	def date_list(self, date):
 		#just contains all events in an specific date
-		queryset		= Event.objects.all()
+		queryset		= Event.objects.get(date_created=date)
 		serialized		= EventSerializer[queryset, many=True]
 
 		return Response(serialized.data)
