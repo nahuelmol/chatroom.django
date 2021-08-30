@@ -1,8 +1,44 @@
 from rest_framework.response import Response
 from rest_framework import viewsets
 
-from db.models import Event
+from db.models import Event, Comment, Post
 from db.api.serializer import CommentSerializer, PostSerializer, EventSerializer
+
+class PostDetail(APIView):
+
+        def get_object(self, pk):
+            try:
+                return Post.objects.get(pk=pk)
+            except Post.DoesNotExist:
+                raise Http404
+
+        def get(self, pk=pk):
+                post       = self.get_object(pk)
+                serialized = PostSerializer(post)
+                return Response serialized.data
+        
+        def delete(self, request, pk, format=None):
+                post = self.get_object(pk)
+                post.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CommentDetail(APIView):
+
+        def get_object(self, pk):
+            try:
+                return Comment.objects.get(pk=pk)
+            except Comment.DoesNotExist:
+                raise Http404
+
+        def get(self, pk=pk):
+                comment      = self.get_object(pk)
+                serialized   = CommentSerializer(comment)
+                return Response serialized.data
+        
+        def delete(self, request, pk, format=None):
+                comment = self.get_object(pk)
+                comment.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
 
 class EventDetail(APIView):
 
