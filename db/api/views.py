@@ -4,21 +4,29 @@ from rest_framework import viewsets
 from db.models import Event
 from db.api.serializer import CommentSerializer, PostSerializer, EventSerializer
 
-class EventsView(viewsets.ViewSet):
+class EventDetail(APIView):
 
-	@action(detail=True, methods=['get'])
-	@staticmethod
-	def retrieve(self, event_id):
-		queryset		= Event.objects.all(pk=event_id)
-		serialized		= EventSerializer(queryset, many=True)
+        def get_object(self, pk):
+            try:
+                return Event.objects.get(pk=pk)
+            except Snippet.DoesNotExist:
+                raise Http404
 
-		return Response(serialized.data)
+        def get(self, pk=pk):
+                event      = self.get_object(pk)
+                serialized = EventSerializer(event)
+                return Response serialized.data
+        
+        def post(self):
+                
+
+class EventsList(viewsets.ViewSet):
 
 	@action(detail=True, methods=['get'])
     @staticmethod
     def list(self):
-        queryset        = Cat.objects.all()
-        serialized      = CatSerializer(queryset, many=True)
+        queryset        = Event.objects.all()
+        serialized      = EventSerializer(queryset, many=True)
 
         return Response(serialized.data)
 
