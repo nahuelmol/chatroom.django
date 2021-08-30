@@ -16,11 +16,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
-    'chat',
-    'comparator',
-    'mytests',
-    'db'
+    'rest_framework.authtoken',
+    #'channels',
+    #'chat',
+    #'comparator',
+    #'mytests',
+    'db',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -92,3 +94,14 @@ STATIC_URL      = '/static/'
 CHANNEL_LAYERS  = {
     "default":{ "BACKEND":"channels.layers.InMemoryChannelLayer"}
     }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':{
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    },
+    'DEFAULT_PERMISSION_CLASSES':{
+        'rest_framework.permissions.IsAuthenticated'
+    }
+}
