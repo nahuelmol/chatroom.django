@@ -17,7 +17,10 @@ class EventDetail(APIView):
                 serialized = EventSerializer(event)
                 return Response serialized.data
         
-        def post(self):
+        def delete(self, request, pk, format=None):
+                snippet = self.get_object(pk)
+                snippet.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
                 
 
 class EventsList(viewsets.ViewSet):
