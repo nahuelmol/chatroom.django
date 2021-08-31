@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     #'comparator',
     #'mytests',
     'db',
-    'accounts'
+    'accounts',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [
