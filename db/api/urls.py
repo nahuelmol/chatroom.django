@@ -1,18 +1,24 @@
 from rest_framework import routers
 
-from db.api.views import EventsView
+from django.conf.urls import url
+from django.urls import include, path
 
-app_name = '_api_'
-router = routers.DefaultRouter() 
+from db.api.views import EventList, PostDetail, CommentDetail, EventDetail
 
-unique_event	= EventsDetail.as_view()
-all_events		= EventsView.as_view({'get':'list'})
-date_events		= EventsView.as_view({'get':'date_list'})
-user_events		= EventsView.as_view({'get':'user_events_list'})
+app_name = 'db-app'
+router = routers.SimpleRouter() 
 
-router.register(r'events/:<pk>', 		unique_event,	basename='event')	
-router.register(r'events/:<date>',		date_events,	basename='events-in')
-router.register(r'events/:<user_id>', 	user_events,	basename='user-events')
-router.register(r'events/', 			all_events,		basename='all-events')
+unique_event	= EventDetail
+#all_events		= EventList.as_view({'get':'list'})
+#date_events		= EventList.as_view({'get':'date_list'})
+#user_events		= EventList.as_view({'get':'user_events_list'})
 
-urlpatterns = router.urls
+#router.register(r'event/<int:pk>', 		unique_event,	basename='event')	
+#router.register(r'events/:<date>',		date_events,	basename='events-in')
+#router.register(r'events/:<user_id>', 	user_events,	basename='user-events')
+#router.register(r'events/', 			all_events,		basename='all-events')
+
+urlpatterns = [
+	path('event/<int:pk>', EventDetail.as_view()),
+	path('api/', include(router.urls))
+]

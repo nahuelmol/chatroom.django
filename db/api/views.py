@@ -12,6 +12,10 @@ from db.api.serializer import CommentSerializer, PostSerializer, EventSerializer
 
 class PostDetail(APIView):
 
+        @classmethod
+        def get_extra_actions(cls):
+            return []
+
         def get_object(self, pk):
             try:
                 return Post.objects.get(pk=pk)
@@ -30,6 +34,10 @@ class PostDetail(APIView):
 
 class CommentDetail(APIView):
 
+        @classmethod
+        def get_extra_actions(cls):
+            return []
+
         def get_object(self, request, pk):
             try:
                 return Comment.objects.get(pk=pk)
@@ -47,6 +55,9 @@ class CommentDetail(APIView):
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
 class EventDetail(APIView):
+        @classmethod
+        def get_extra_actions(cls):
+            return []
 
         def get_object(self, pk):
             try:
@@ -55,6 +66,8 @@ class EventDetail(APIView):
                 raise Http404
 
         def get(self, pk):
+                print(pk)
+
                 event      = self.get_object(pk)
                 serialized = EventSerializer(event)
                 return Response(serialized.data)
@@ -64,7 +77,7 @@ class EventDetail(APIView):
                 snippet.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
                 
-class EventsList(viewsets.ViewSet):
+class EventList(viewsets.ViewSet):
 
     @staticmethod
     def list(self):
