@@ -7,6 +7,11 @@
 	<div id="content">
 		<h1>Hola</h1>
 	</div>
+	<div>
+		{% for chat in chat_list %}
+			<p>{{ chat.chatroom_name }}</p>
+		{% endfor %}
+	</div>
 	
 </body>
 </html>

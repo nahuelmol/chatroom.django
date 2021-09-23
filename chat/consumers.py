@@ -4,18 +4,21 @@ import datetime
 from channels.generic.websocket import AsyncWebsocketConsumer
 from comparator.generator import word_generator
 
+from db.views import create_message
+from asgiref.sync import sync_to_async
+
 class Counter:
 	def __init__(self,count):
 		self._count = count
 
-        def monitor(self):
-                printf('users connected: '+ str(self._count))
+	def monitor(self):
+		print('users connected: '+ str(self._count))
 
 	def more(self):
 		self._count = self._count + 1
 
-        def less(self):
-                self._count = self._count - 1     
+	def less(self):
+		self._count = self._count - 1     
 
 my_counter = Counter(0)
 
@@ -24,7 +27,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		
 		my_counter.more()
-                my_counter.monitor()
+		my_counter.monitor()
 
 		self.room_name 			= self.scope['url_route']['kwargs']['room_name']
 		self.room_group_name	='chat_%s' % self.room_name
@@ -52,8 +55,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 			self.room_group_name,
 			self.channel_name
 			)
-                counter.less()
-                counter.monitor()
+		my_counter.less()
+		my_counter.monitor()
 
 	######################################################################
 	async def receive(self, text_data):
@@ -65,9 +68,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		email			= text_data_json['email']
 		time			= str(result.hour) +':'+str(result.minute)
 
-		print('time: '+time)
+		await create_message(message, username, self.room_group_name, time)
 
-		#comparing = compare_word(message)
+		print('time: '+time)
 
 		await self.channel_layer.group_send (
 			self.room_group_name,

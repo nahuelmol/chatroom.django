@@ -9,9 +9,6 @@ class Event(models.Model):
 
 	name				= models.CharField(max_length=30)
 
-	#user_asociated		= models.ManyToManyField(User)
-	#user_owner_creator	= models.ForeignKey(User, on_delete=models.CASCADE)
-
 	date_created		= models.IntegerField()
 	date_to_launch		= models.IntegerField()
 
@@ -41,3 +38,17 @@ class Comment(models.Model):
 	date_to_launch	= models.IntegerField()
 	description		= models.TextField(max_length=60)
 	post 			= models.ForeignKey(Post, on_delete=models.CASCADE)
+
+class Chatroom(models.Model):
+	chatroom_name 	= models.CharField(max_length=30)
+	creation_date  	= models.CharField(max_length=30)
+	author			= models.CharField(max_length=30)
+	link_to_join 	= models.CharField(max_length=30) 		
+
+class Message(models.Model):
+	chatroom_id 	= models.ForeignKey(Chatroom, on_delete=models.CASCADE, null=True)
+	author			= models.CharField(max_length=30)
+	content 		= models.TextField(max_length=30)
+	creation_date 	= models.CharField(max_length=30)
+	chatroom 		= models.CharField(max_length=30)
+

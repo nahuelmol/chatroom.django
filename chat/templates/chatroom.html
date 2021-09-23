@@ -5,19 +5,28 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	<title>Hello world!</title>
 </head>
 <body>
-	<div class="content " >
+	<div class="content" style="{width:100%;}" >
 		<textarea id="chat-text" cols="60" rows="15">
 		</textarea></br>
 		<input id="input" type="text" size="80"></br>
 		<input id="submit" type="button" value="Send">
 	</div>
+	<div>
+		<p id="welcomemsg"></p>
+	</div>
+	<div id="handlebar1"></div>
 
 	{{ room__name|json_script:"room-name" }}
 	{{ request.user.username|json_script:"user-username" }}
 	{{ request.user.email|json_script:"user-email"}}
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 	<script type="text/javascript">
 	var local_host 	= window.location.host;
@@ -43,16 +52,24 @@
 	const chatSocket 	= new WebSocket(
 		'ws://'+ local_host + '/ws/chat/'+ roomName + '/');
 	
-	chatSocket.onmessage= function (e){
-		const data 		= JSON.parse(e.data);
-		const username 	= data.user_username_ + ' says'
+	chatSocket.onmessage = function (e){
 
-		document.querySelector('#chat-text').value 		+= (username +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
+		const data 		= JSON.parse(e.data);
+
+		if(data.hasOwnProperty('tester')){
+			console.log("printing welcome message")
+
+			var prove = "<p>Hola, " + data.tester +"</p>"
+
+			document.getElementById('handlebar1').innerHTML = prove;
+		}else{
+			const username 	= data.user_username_ + ' says'
+	 		document.querySelector('#chat-text').value 		+= (username +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
+		}
+
 	}
 
 	</script>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	
 </body>
 </html>
