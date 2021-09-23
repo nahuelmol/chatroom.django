@@ -12,6 +12,22 @@
 			<p>{{ chat.chatroom_name }}</p>
 		{% endfor %}
 	</div>
+	<div>
+		<form action="{% url 'chatapp:creator' %}" method="post">
+			{% csrf_token %}
+			<br>
+			<label>Chatname:</label><br>
+			<input type="tex" name="chatname"><br>
+			
+			<label>Author:</label><br>
+			<input type="text" name="author"><br>
+
+			<input type="submit" value="Send">
+			
+		</form>
+	</div>
+	<a href="{% url 'chatapp:index' %}">Index</a>
+	<a href="{% url 'chatapp:algo' %}">Algo</a>
 	
 </body>
 </html>
