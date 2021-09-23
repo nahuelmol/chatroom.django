@@ -9,8 +9,13 @@
 	<title>Hello world!</title>
 </head>
 <body>
-	<div class="content" style="{width:100%;}" >
+	<div class="content" style="width:100%;" >
 		<textarea id="chat-text" cols="60" rows="15">
+		{% for each in messages %}
+		{{ each.author }}
+		{{ each.content }}
+		{{ each.creation_date }}
+		{% endfor %}
 		</textarea></br>
 		<input id="input" type="text" size="80"></br>
 		<input id="submit" type="button" value="Send">
