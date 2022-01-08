@@ -43,7 +43,10 @@ class Chatroom(models.Model):
 	chatroom_name 	= models.CharField(max_length=30)
 	creation_date  	= models.CharField(max_length=30)
 	author			= models.CharField(max_length=30)
-	link_to_join 	= models.CharField(max_length=30) 		
+	link_to_join 	= models.CharField(max_length=30) 	
+
+	def __str__(self):
+		return 'Nothing'	
 
 class Message(models.Model):
 	chatroom_id 	= models.ForeignKey(Chatroom, on_delete=models.CASCADE, null=True)

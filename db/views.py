@@ -2,6 +2,8 @@ from db.models import Message, Chatroom
 from asgiref.sync import sync_to_async
 import datetime
 
+from django.shortcuts import redirect
+
 @sync_to_async
 def create_message(message, username, chatroom, time):
 	new_message = Message(
@@ -27,3 +29,6 @@ def create_chatroom(chatroom_name,author):
 		)
 
 	new_chat.save()
+
+	if(new_chat):
+		return redirect(link)

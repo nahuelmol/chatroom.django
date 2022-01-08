@@ -5,24 +5,28 @@
 </head>
 <body>
 	<div id="content">
-		<h1>Hola</h1>
+		<h2>Hallo, leute!</h2>
+		<p>There's the index where you can find chat already created, and even you can make yours</p>
 	</div>
 	<div>
+		<h3>next, our chats... </h3>
 		{% for chat in chat_list %}
 			<p>{{ chat.chatroom_name }}</p>
 		{% endfor %}
 	</div>
+
 	<div>
-		<form action="{% url 'chatapp:creator' %}" method="post">
+		<h3>Let's create your own chat</h3>
+		<form action="{% url 'saver:chatrooms' %}" method="post">
 			{% csrf_token %}
 			<br>
 			<label>Chatname:</label><br>
-			<input type="tex" name="chatname"><br>
+			<input type="text" name="chatname"/><br>
 			
 			<label>Author:</label><br>
-			<input type="text" name="author"><br>
+			<input type="text" name="author"/><br>
 
-			<input type="submit" value="Send">
+			<button type="submit">puerco</button>
 			
 		</form>
 	</div>
