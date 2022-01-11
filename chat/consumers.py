@@ -5,7 +5,10 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from comparator.generator import word_generator
 
 from db.views import create_message
+from comparator.generator import compare_message, word_generator
+
 from asgiref.sync import sync_to_async
+
 
 class Counter:
 	def __init__(self,count):
@@ -23,6 +26,8 @@ class Counter:
 my_counter = Counter(0)
 
 class ChatRoomConsumer(AsyncWebsocketConsumer):
+
+
 
 	async def connect(self):
 		
@@ -78,9 +83,42 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 			)
 
 	async def chatroom_message(self, event):
+
+		global WORD_TO_GUESS
+
 		message 		= event['message_event'] #we collect the message event from the group (inside of receive function)
 		user_username 	= event['username_event'] #we collect the username too
 		time_message 	= event['time_event']
+
+		if message[0] == '#':
+			word_msg = message.replace('#',"")
+			res = compare_message(word_msg, WORD_TO_GUESS)
+
+			if res:
+				await self.send(text_data=json.dumps({
+					'message_to_group':'Theres a winner, ' + 
+						user_username + ', the word is: ' +
+						word_msg + '\n',
+					'user_username_':'computer',
+					'time_of_message':time_message
+					}))
+
+				print('well done!')
+			else:
+				print('failed')
+
+			print(word_msg)
+
+		if message == 'generate':
+
+			await self.send(text_data=json.dumps({
+					'message_to_group':'lets try to guess the word\n',
+					'user_username_':'computer',
+					'time_of_message':time_message
+					}))
+
+			WORD_TO_GUESS = word_generator()
+			print(WORD_TO_GUESS)
 
 		#then we send the info
 		await self.send(text_data=json.dumps({

@@ -14,7 +14,6 @@ def create_message(message, username, chatroom, time):
 		)
 	new_message.save()
 
-
 def create_chatroom(chatroom_name,author):
 
 	result 			= datetime.datetime.now()

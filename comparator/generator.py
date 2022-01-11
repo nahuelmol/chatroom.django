@@ -1,15 +1,25 @@
 import requests
 import json
+import os
+
+from asgiref.sync import sync_to_async
 
 from dotenv import load_dotenv
+
+def compare_message(word, WORD_TO_GUESS):
+
+	if word == WORD_TO_GUESS:
+		return True
+	else:
+		return False
 
 def word_generator():
 	load_dotenv()
 
 	apikey 		= os.environ.get('WORD_API_KEY')
-	max_length	= 8
-	min_length	= 5
-	limit		= 1
+	max_length	= str(8)
+	min_length	= str(5)
+	limit		= str(1)
 
 	req 	= requests.get('http://api.wordnik.com/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0'
 						+'&minLength='+	min_length
