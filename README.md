@@ -7,9 +7,9 @@
 
 ## Goal
 
-To create a game that allows users to guess words. It going to generate random words, and we should throw what is the word we guess it is
+To create a game that allows users to guess words. It's about of random words generation, and we should throw what is the word we think it could be. Yes, it's not an original idea but it's entertaining.
 
-Now, I think it would be great to add more alterbstives to this platform. Adding the posibility to plan chat events, I mean common chats. And also, to plan adding game events based on the chat game mentioned in prev paragraph
+Now, I think it would be great to add more alternatives to this platform. Adding the posibility to plan chat events, chatsrooms. And also, to plan adding game events based on the chat game mentioned in prev paragraph
 
 ### Tests
 
