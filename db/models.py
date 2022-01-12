@@ -45,6 +45,9 @@ class Chatroom(models.Model):
 	author			= models.CharField(max_length=30)
 	link_to_join 	= models.CharField(max_length=30) 	
 
+	asunto 			= models.CharField()
+	description 	= models.TextField()
+
 	def __str__(self):
 		return 'Nothing'	
 
