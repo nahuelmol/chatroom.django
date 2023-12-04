@@ -41,6 +41,8 @@ class SaveChatroom(APIView):
 
 		try:
 			new_chat.save()
+			return redirect('chatapp:index')
+			
 		except Exception as e:
 
 			exe = str(e)

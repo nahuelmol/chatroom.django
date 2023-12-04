@@ -12,13 +12,16 @@ from db.views import create_chatroom
 @login_required(login_url='/admin/')
 def index(request):
 	chat_list = Chatroom.objects.all()
+	
+	for i in range(1,len(chat_list)):
+		print(i)
 
 	context = {
 		'chat_list': chat_list,
 	}
 	return render(request, 'index.html', context) 
 
-
+@login_required(login_url='/admin/')
 def room(request, room_name):
 	array = []
 	msg_array = []

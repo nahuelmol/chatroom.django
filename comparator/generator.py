@@ -21,16 +21,26 @@ def word_generator():
 	min_length	= str(5)
 	limit		= str(1)
 
-	req 	= requests.get('http://api.wordnik.com/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0'
+	try:
+		req 	= requests.get('http://api.wordnik.com/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0'
 						+'&minLength='+	min_length
 						+'&maxLength='+	max_length
 						+'&limit='+		limit
 						+'&api_key='+	apikey)
+		
+		if req.status_code == 200:
+			result = json.loads(req.content)[0]['word']
 
-	if req.status_code == 200:
-		result = json.loads(req.content)[0]['word']
+			return result
 
-		return result
+	except Exception as e:
+		
+		final = '\nit is immposible to create a connection\nword not generated'
+		return final
+
+	
+
+	
 
 if __name__ == "__main__":
 	word_generator()

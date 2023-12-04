@@ -72,6 +72,26 @@
 	 		document.querySelector('#chat-text').value 		+= (username +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
 		}
 
+		console.log(data)
+
+		if(data.hasOwnProperty('answer')){
+			var response = 'word guessed'
+			if(data.answer == 1){
+				response = response + ' correctly';
+			}
+			
+			if(data.answer == 0){
+				response = response + ' incorrectly';
+			}
+
+			document.getElementById('handlebar1').innerHTML = response;
+
+		}
+
+		if(data.hasOwnProperty('state')){
+			document.getElementById('handlebar1').innerHTML = data.state;
+		}
+
 	}
 
 	</script>
