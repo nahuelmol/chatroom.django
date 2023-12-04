@@ -5,7 +5,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from comparator.generator import word_generator
 
 from db.views import create_message
-from comparator.generator import compare_message, word_generator
+from comparator.generator import compare_message, word_generator, Msgsender, chatting
 
 from asgiref.sync import sync_to_async
 
@@ -15,6 +15,9 @@ class Word:
 
 	def change(self, neword):
 		self._word = neword
+
+	def clean(self):
+		self._word = ' '
 
 class Counter:
 	def __init__(self,count):
@@ -96,64 +99,44 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		time_message 	= event['time_event']
 
 		if word._word == ' ':
-				print('please generate a word')
+				msg = Msgsender('generate', user_username, time_message, word._word)
+				print('is needed to generate a word to start the game')
 
-				await self.send(text_data=json.dumps({
-					'answer':1,
-					'message_to_group':'generate a word\n',
-					'user_username_':'computer',
-					'time_of_message':time_message
-					}))
+				await self.send(text_data=json.dumps(msg))
 
 		if message[0] == '#':
 
 			if word._word == ' ':
+				msg = Msgsender('empty', user_username, time_message, word._word)
 				print('please generate a word')
 
-				await self.send(text_data=json.dumps({
-					'answer':1,
-					'message_to_group':'generate a word\n',
-					'user_username_':'computer',
-					'time_of_message':time_message
-					}))
+				await self.send(text_data=json.dumps(msg))
 			else:
 				word_msg = message.replace('#',"")
 				res = compare_message(word_msg, word._word)
 
 				if res:
-					await self.send(text_data=json.dumps({
-						'answer':1,
-						'message_to_group':'Theres a winner, ' + 
-								user_username + ', the word is: ' +
-								word_msg + '\n',
-						'user_username_':'computer',
-						'time_of_message':time_message
-						}))
-
+					msg = Msgsender('winner', user_username, time_message, word._word)
 					print('well done!')
 				else:
-					await self.send(text_data=json.dumps({
-						'answer':0,
-						'message_to_group': user_username + 'failed with: ' +
-							word_msg + '\n',
-						'user_username_':'computer',
-						'time_of_message':time_message
-						}))
-					print('failed')
+					msg = Msgsender('looser', user_username, time_message, word._word)
+					print('failed!')
 
 
-		if message == 'generate':
+				await self.send(text_data=json.dumps(msg))
 
-			await self.send(text_data=json.dumps({
-					'state':'generating word',
-					'message_to_group':'lets try to guess the word\n',
-					'user_username_':'computer',
-					'time_of_message':time_message
-					}))
+		elif message == '!generate':
+			msg = Msgsender('guess it', user_username, time_message, word._word)
+
+			await self.send(text_data=json.dumps(msg))
 
 			WORD_TO_GUESS = word_generator()
 			word.change(WORD_TO_GUESS)
-			print(word._word)
+			print("the word to guess is: " + word._word)
+
+		else:
+			msg = chatting(user_username, time_message, message)
+			await self.send(text_data=json.dumps(msg))
 
 	###########################################################
 	pass

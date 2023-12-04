@@ -38,9 +38,44 @@ def word_generator():
 		final = '\nit is immposible to create a connection\nword not generated'
 		return final
 
-	
 
-	
+def Msgsender(message, username, time, word):
+	msgcontent = ''
 
-if __name__ == "__main__":
-	word_generator()
+	if message == 'winner':
+		msgcontent = 'Theres a winner, ' + username + ', the word is: ' + word + '\n'
+
+	elif message == 'looser':
+		msgcontent = username + 'failed with: ' + word + '\n'
+
+	elif message == 'generate':
+		msgcontent = 'generate a word!'
+
+	elif message == 'empty':
+		msgcontent = 'theres not a word to guess'
+
+	elif message == 'guess it':
+		msgcontent = 'lets try to guess the word'
+
+	else:
+		msgcontent = 'not a single message'
+
+	msg = {	'answer':1,
+		'message_to_group':msgcontent,
+		'user_username_':'computer',
+		'time_of_message':time
+	}
+
+	return msg
+
+
+def chatting(user, time, msg):
+	
+	obj = {
+		'answer':1,
+		'message_to_group':msg,
+		'user_username_':'computer',
+		'time_of_message':time
+	}
+
+	return obj
