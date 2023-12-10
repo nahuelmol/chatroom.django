@@ -5,9 +5,10 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from comparator.generator import word_generator
 
 from db.views import create_message
-from comparator.generator import compare_message, word_generator, Msgsender, chatting
+from comparator.generator import compare_message, word_generator, Msgsender, chatting, command
 
 from asgiref.sync import sync_to_async
+
 
 class Word:
 	def __init__(self, word):
@@ -32,6 +33,8 @@ class Counter:
 	def less(self):
 		self._count = self._count - 1     
 
+######################################################################################
+
 my_counter = Counter(0)
 word = Word(' ')
 
@@ -53,9 +56,10 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 			)
 		await self.accept()
 
-		await self.channel_layer.group_send (self.room_group_name,
+		await self.channel_layer.group_send(self.room_group_name,
 			{	'type':'welcome_message',
-				'tester':'Welcome to the Chat Room'})
+				'tester':'Welcome to the Chat Room',
+				'connected': my_counter._count})
 
 	async def welcome_message(self, event):
 		tester 						= event['tester'] #capturing the value
@@ -85,33 +89,28 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
 		print('time: '+time)
 
-		await self.channel_layer.group_send (
-			self.room_group_name,
-			{'type':'chatroom_message','message_event':message,'username_event':username,'time_event':time}
-			)
+		obj = {
+			'type':'chatroom_message',
+			'message_event':message,
+			'username_event':username,
+			'time_event':time}
+
+		await self.channel_layer.group_send(self.room_group_name, obj)
 
 	async def chatroom_message(self, event):
-
-		print('the word to guess is: ' + word._word)
 
 		message 		= event['message_event'] #we collect the message event from the group (inside of receive function)
 		user_username 	= event['username_event'] #we collect the username too
 		time_message 	= event['time_event']
 
-		if word._word == ' ':
-				msg = Msgsender('generate', user_username, time_message, word._word)
-				print('is needed to generate a word to start the game')
+		#if word._word == ' ':
+		#		msg = Msgsender('empty', user_username, time_message, word._word)
+		#		await self.send(text_data=json.dumps(msg))
 
-				await self.send(text_data=json.dumps(msg))
 
 		if message[0] == '#':
-
-			if word._word == ' ':
-				msg = Msgsender('empty', user_username, time_message, word._word)
-				print('please generate a word')
-
-				await self.send(text_data=json.dumps(msg))
-			else:
+			
+			if word._word != ' ':
 				word_msg = message.replace('#',"")
 				res = compare_message(word_msg, word._word)
 
@@ -119,24 +118,33 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 					msg = Msgsender('winner', user_username, time_message, word._word)
 					print('well done!')
 				else:
-					msg = Msgsender('looser', user_username, time_message, word._word)
+					msg = Msgsender('looser', user_username, time_message, word_msg)
 					print('failed!')
 
 
 				await self.send(text_data=json.dumps(msg))
 
-		elif message == '!generate':
-			msg = Msgsender('guess it', user_username, time_message, word._word)
+			else:
+				msg = Msgsender('empty', user_username, time_message, word._word)
+				await self.send(text_data=json.dumps(msg))
+
+		elif message[0] == '!':
+
+			frase 	= message.replace('!',"")
+
+			msg = command(word, user_username, frase, time_message)
 
 			await self.send(text_data=json.dumps(msg))
-
-			WORD_TO_GUESS = word_generator()
-			word.change(WORD_TO_GUESS)
-			print("the word to guess is: " + word._word)
 
 		else:
-			msg = chatting(user_username, time_message, message)
+			msg = await chatting(user_username, time_message, message)
 			await self.send(text_data=json.dumps(msg))
+
+		people = {
+			'countered':my_counter._count
+		}
+
+		await self.send(text_data=json.dumps(people))
 
 	###########################################################
 	pass

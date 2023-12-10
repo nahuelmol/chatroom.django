@@ -2,10 +2,79 @@ from rest_framework.views import APIView
 from rest_framework import permissions, authentication
 
 from django.shortcuts import redirect
+from django.http import JsonResponse
 
-from db.models import Chatroom
+from db.models import Chatroom, Follower
 
 import datetime
+
+class SaveFollower(APIView):
+
+	authentication_classes = [
+		authentication.TokenAuthentication]
+	permission_classes = [
+		permissions.AllowAny]
+
+	def post(self, request):
+
+		print(request.data)
+
+		userid 		= request.data.get('id')
+		username 	= request.data.get('username')
+
+		new_follower	= Follower(
+			followed_chatroom=chatroomid,
+			followed_user=chatroom_creator_id,
+			user_follower=userid,
+			date_follow=date)
+
+		try:
+			new_follower.save()
+			return JsonResponse({'mensaje': 'following successful'})
+			
+		except Exception as e:
+
+			exe = str(e)
+
+			if new_follower:
+				return JsonResponse({'mensaje': 'following successful'})
+			else:
+				return JsonResponse({'mensaje': 'following successful'})
+
+
+class SaveSubscriber(APIView):
+
+	authentication_classes = [
+		authentication.TokenAuthentication]
+	permission_classes = [
+		permissions.AllowAny]
+
+	def post(self, request):
+
+		print(request.data)
+
+		userid 		= request.data.get('id')
+		username 	= request.data.get('username')
+
+		new_subscriber	= Subscriber(
+			followed_user=chatroom_creator_id,
+			user_subscriber=userid,
+			date_follow=date)
+
+		try:
+			new_subscriber.save()
+			return JsonResponse({'mensaje': 'Subscribed successfully'})
+			
+		except Exception as e:
+
+			exe = str(e)
+
+			if new_subscriber:
+				return JsonResponse({'mensaje': 'Solicitud exitosa'})
+			else:
+				return JsonResponse({'mensaje': 'Solicitud exitosa'})
+
+
 
 class SaveChatroom(APIView):
 

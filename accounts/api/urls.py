@@ -5,7 +5,7 @@ from django.urls import include, path
 
 from rest_framework.authentication import TokenAuthentication
 
-app_name = 'api_name'
+app_name = 'accountapp'
 router = routers.SimpleRouter()
 
 login_view		= LoginView.as_view()

@@ -7,27 +7,52 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	<title>Hello world!</title>
+
+	<style type="text/css">
+		.contenedor {
+      		width: 80%; /* Ancho del contenedor principal */
+      		margin: 0 auto; /* Centrar el contenedor en la página */
+      		overflow: hidden; /* Limpiar floats */
+    	}
+
+    	.columna {
+      		width: 50%; /* Ancho de cada columna */
+      		float: left; /* Hacer que las columnas se sitúen una al lado de la otra */
+      		box-sizing: border-box; /* Incluir el padding y el borde en el ancho total */
+      		padding: 20px; /* Espaciado interno de las columnas */
+    	}
+
+
+
+	</style>
 </head>
 <body>
-	<div class="content" style="width:100%;" >
-		<textarea id="chat-text" cols="60" rows="15">
-		{% for each in messages %}
-		{{ each.author }}
-		{{ each.content }}
-		{{ each.creation_date }}
-		{% endfor %}
-		</textarea></br>
-		<input id="input" type="text" size="80"></br>
-		<input id="submit" type="button" value="Send">
-	</div>
-	<div>
-		<p id="welcomemsg"></p>
-	</div>
-	<div id="handlebar1"></div>
+		<div class="content" style="width:100%;" >
+				<textarea id="chat-text" cols="60" rows="15">
+				{% for each in messages %}
+				{{ each.author }}
+				{{ each.content }}
+				{{ each.creation_date }}
+				{% endfor %}
+				</textarea></br>
+				<input id="input" type="text" size="80"></br>
+				<input id="submit" type="button" value="Send">
+		</div>
 
-	{{ room__name|json_script:"room-name" }}
-	{{ request.user.username|json_script:"user-username" }}
-	{{ request.user.email|json_script:"user-email"}}
+		<div><p id="welcomemsg"></p></div>
+
+		<div id="handlebar1"></div>
+
+			{{ room__name|json_script:"room-name" }}
+			{{ request.user.username|json_script:"user-username" }}
+			{{ request.user.email|json_script:"user-email"}}
+
+		</div>
+
+		<div>
+			<input id="followbtn" type="button" value="Follow">
+		</div>
+	
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -67,30 +92,81 @@
 			var prove = "<p>Hola, " + data.tester +"</p>"
 
 			document.getElementById('handlebar1').innerHTML = prove;
-		}else{
-			const username 	= data.user_username_ + ' says'
-	 		document.querySelector('#chat-text').value 		+= (username +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
 		}
 
-		console.log(data)
+		if (data.type == 'game_noti'){
+			resp = data.message_to_group
 
-		if(data.hasOwnProperty('answer')){
-			var response = 'word guessed'
-			if(data.answer == 1){
-				response = response + ' correctly';
-			}
-			
-			if(data.answer == 0){
-				response = response + ' incorrectly';
-			}
-
-			document.getElementById('handlebar1').innerHTML = response;
-
+			document.getElementById('handlebar1').innerHTML = resp;
 		}
+
+		if (data.type == 'chat_msg'){
+			const username 	= '\n'+data.user_username_ + ' says'
+			role = ''
+
+			if (data.admin == 1){
+				role = ' |admin';
+			};
+
+	 		document.querySelector('#chat-text').value 		+= (username + role +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
+		}
+
+		if (data.type == 'word_suggest'){
+			const username 	= '\n'+data.user_username_ + ' suggested'
+	 		document.querySelector('#chat-text').value 		+= (data.message_to_group);
+		}
+
+		if (data.type == 'banned'){
+			const username 	= '\n'+data.user_username_ + ' suggested'
+	 		document.querySelector('#chat-text').value 		+= (data.message_to_group);
+		}
+
 
 		if(data.hasOwnProperty('state')){
 			document.getElementById('handlebar1').innerHTML = data.state;
 		}
+
+	}
+
+	const requesting_to_back = (url) => {
+
+		fetch(url, {
+    		method: 'POST',
+    		headers: {
+      		'Content-Type': 'application/json',
+      		'X-CSRFToken': '{{ csrf_token }}'
+    		},
+    		body: JSON.stringify(usuario)
+  		})
+  		.then(response => {
+    		if (!response.ok) {
+      			throw new Error('Error al realizar la solicitud al backend');
+    		}
+   			return response.json();
+  		})
+  		.then(data => {
+    		console.log('Solicitud exitosa:', data);
+  		})
+  		.catch(error => {
+    		console.error('Error:', error);
+  		});
+	}
+
+	document.querySelector('#followbtn').onclick = function (e) {
+
+		var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
+		var url = "{% url 'saver:followers' %}";
+
+		requesting_to_back(url)  		
+
+	}
+
+	document.querySelector('#subscribebtn').onclick = function (e) {
+
+		var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
+		var url = "{% url 'saver:subscribers' %}";
+
+		requesting_to_back(url) 
 
 	}
 

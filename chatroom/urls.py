@@ -13,8 +13,9 @@ urlpatterns = [
     path('chat/',   	include('chat.urls', namespace='chatapp')),
     path('creator/',	include('chat.api.urls', namespace='saver')),
 
-    path('player/', 	include(('accounts.api.urls', 'api_name'), namespace='instance_name')),
+    path('player/', 	include(('accounts.api.urls', 'accountapp'), namespace='instance_name')),
     path('prove/',  	LoginView.as_view()),
     path('db/', 		include('db.api.urls')),
-    path(r'api_docs/', 	schema_view)
+    path(r'api_docs/', 	schema_view),
+
 ]

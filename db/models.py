@@ -1,6 +1,43 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Chatroom(models.Model):
+	chatroom_name 	= models.CharField(max_length=30)
+	creation_date  	= models.CharField(max_length=30)
+	author			= models.CharField(max_length=30)
+	link_to_join 	= models.CharField(max_length=30) 	
+
+	asunto 			= models.CharField(	max_length=30,
+										default='conversation')
+	description 	= models.TextField(	max_length=60,
+										default='a normal conversation')
+
+	def __str__(self):
+		return 'Nothing'
+
+class Encuesta(models.Model):
+
+	date_created		= models.DateField()
+	deadline 			= models.DateField()
+
+	user_creator 		= models.ForeignKey(User, on_delete=models.CASCADE)
+	options				= models.IntegerField()
+	vote_count 			= models.IntegerField()
+
+class Follower(models.Model):
+
+	date_follow			= models.DateField()
+	user_follower 		= models.ForeignKey(User, on_delete=models.CASCADE)
+	followed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
+	followed_chatroom	= models.ForeignKey(Chatroom, on_delete=models.CASCADE)
+
+class Subscriber(models.Model):
+
+	date_subs			= models.DateField()
+	subscribed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
+	follower_subscriber	= models.ForeignKey(Follower, on_delete=models.CASCADE)
+	
+
 class Event(models.Model):
 
 	class PrivacyEvent(models.TextChoices):
@@ -39,19 +76,7 @@ class Comment(models.Model):
 	description		= models.TextField(max_length=60)
 	post 			= models.ForeignKey(Post, on_delete=models.CASCADE)
 
-class Chatroom(models.Model):
-	chatroom_name 	= models.CharField(max_length=30)
-	creation_date  	= models.CharField(max_length=30)
-	author			= models.CharField(max_length=30)
-	link_to_join 	= models.CharField(max_length=30) 	
-
-	asunto 			= models.CharField(	max_length=30,
-										default='conversation')
-	description 	= models.TextField(	max_length=60,
-										default='a normal conversation')
-
-	def __str__(self):
-		return 'Nothing'	
+	
 
 class Message(models.Model):
 	chatroom_id 	= models.ForeignKey(Chatroom, on_delete=models.CASCADE, null=True)
