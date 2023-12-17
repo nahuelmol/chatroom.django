@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, authentication
 
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import JsonResponse
 
@@ -87,22 +88,25 @@ class SaveChatroom(APIView):
 	def post(self, request):
 
 		headers = request.META
-		author 	= request.data.get('author')
-		chatna 	= request.data.get('chatname')
+		chat 	= request.POST.get('chatname')
+		author 		= request.user.username 
+
+
+		print("current user: ", request.user.username)
 
 		chats = []
 		chats = Chatroom.objects.all()
 
-		if chatna in chats:
+		if chat in chats:
 			messages.add_message(request, messages.INFO, 'this chat name already exists, please choose other')
-			return redirect('chatapp:index')
+			return redirect('chatapp:feed')
 
 		result 			= datetime.datetime.now()
 		time			= str(result.hour) +':'+str(result.minute)
-		link 			= "http://localhost:8000"+"/"+chatna
+		link 			= "http://localhost:8000"+"/"+chat
 
 		new_chat = Chatroom(
-			chatroom_name=chatna,
+			chatroom_name=chat,
 			creation_date=time,
 			author=author,
 			link_to_join=link,
@@ -110,7 +114,7 @@ class SaveChatroom(APIView):
 
 		try:
 			new_chat.save()
-			return redirect('chatapp:index')
+			return redirect('chatapp:feed')
 			
 		except Exception as e:
 
@@ -118,13 +122,13 @@ class SaveChatroom(APIView):
 
 			if new_chat:
 				messages.success(request, 'chatroom created: '+ exe)
-				return redirect('chatapp:index')
+				return redirect('chatapp:feed')
 			else:
 				messages.success(request, 'chatroom not created: '+ exe)
-				return redirect('chatapp:index')
+				return redirect('chatapp:feed')
 
 	def get(self, request):
 
 		messages.add_message(request, messages.INFO, 'get request arent allowed')
-		return redirect('chatapp:index')
+		return redirect('chatapp:feed')
 

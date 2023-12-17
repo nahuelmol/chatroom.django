@@ -87,8 +87,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
 		await create_message(message, username, self.room_group_name, time)
 
-		print('time: '+time)
-
 		obj = {
 			'type':'chatroom_message',
 			'message_event':message,
@@ -102,11 +100,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		message 		= event['message_event'] #we collect the message event from the group (inside of receive function)
 		user_username 	= event['username_event'] #we collect the username too
 		time_message 	= event['time_event']
-
-		#if word._word == ' ':
-		#		msg = Msgsender('empty', user_username, time_message, word._word)
-		#		await self.send(text_data=json.dumps(msg))
-
 
 		if message[0] == '#':
 			

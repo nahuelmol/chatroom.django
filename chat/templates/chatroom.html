@@ -5,53 +5,105 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 	<title>Hello world!</title>
 
 	<style type="text/css">
+
+		.taman {
+			width: 100%; /* Tamaño fijo del jumbotron */
+    		height: 300px; /* Tamaño fijo del jumbotron */
+    		overflow: auto;
+		}
+		
 		.contenedor {
-      		width: 80%; /* Ancho del contenedor principal */
-      		margin: 0 auto; /* Centrar el contenedor en la página */
-      		overflow: hidden; /* Limpiar floats */
+			width: 100%;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+			font-size: 12px;
+      		gap:10px;
     	}
 
     	.columna {
-      		width: 50%; /* Ancho de cada columna */
-      		float: left; /* Hacer que las columnas se sitúen una al lado de la otra */
-      		box-sizing: border-box; /* Incluir el padding y el borde en el ancho total */
-      		padding: 20px; /* Espaciado interno de las columnas */
+    		flex: 1;
+    		text-align: left;
+    		border: 1px solid #ccc;
+    		padding: 15px;
     	}
 
+    	.mensajes {
+    		text-align: left;
+    	}
+
+    	.content textarea {
+    		text-align: left;
+    		white-space: pre-wrap;
+    	}
 
 
 	</style>
 </head>
-<body>
-		<div class="content" style="width:100%;" >
-				<textarea id="chat-text" cols="60" rows="15">
-				{% for each in messages %}
-				{{ each.author }}
-				{{ each.content }}
-				{{ each.creation_date }}
-				{% endfor %}
-				</textarea></br>
-				<input id="input" type="text" size="80"></br>
-				<input id="submit" type="button" value="Send">
+<body>	
+		<div class="contenedor">
+			<div class="columna">
+				
+			</div>
+			<div class="columna">
+				<p>Stream</p>
+				<div id="handlebar1"></div>
+				<div>
+					{{ room__name|json_script:"room-name" }}
+					{{ request.user.username|json_script:"user-username" }}
+					{{ request.user.email|json_script:"user-email"}}
+				</div>
+
+				<div>
+
+					{% if is_owner %}
+    					<p>You can manage your chat with... </p>
+    					<div id="my" data-my-variable="{{ is_owner }}"></div>
+						<input id="cleanbtn" type="button" value="Clean chat"><br><br>
+						<input id="addlinkbtn" type="button" value="Add link"><br><br>
+					{% else %}
+    					<p>Enjoy the chat</p>
+    					<input id="followbtn" type="button" value="Follow"><br><br>
+						<input id="donarsubbtn" type="button" value="Donar subs">
+					{% endif %}
+					
+				</div>
+			</div>
+			<div class="columna">
+				<p>Chat</p>
+				<div class="content">
+					</br>
+					<div class="jumbotron taman" id="chattext-2">
+						{% for each in messages %}
+							<br>
+							{% if is_owner %}
+								{{ each.author }} 
+							{% else %}
+								{{ each.author }}
+							{% endif %}
+							<br>
+							{{ each.content }}
+							<br>
+							{{ each.creation_date }}
+							<br>
+						{% endfor %}
+						
+					</div></br>
+					<input id="input" type="text" size="30"></br>
+					<input id="submit" type="button" value="Send">
+				</div>
+			</div>
+
 		</div>
+		
 
 		<div><p id="welcomemsg"></p></div>
 
-		<div id="handlebar1"></div>
-
-			{{ room__name|json_script:"room-name" }}
-			{{ request.user.username|json_script:"user-username" }}
-			{{ request.user.email|json_script:"user-email"}}
-
-		</div>
-
-		<div>
-			<input id="followbtn" type="button" value="Follow">
-		</div>
+		
 	
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -65,6 +117,25 @@
 	const roomName 		=JSON.parse(document.getElementById('room-name').textContent);
 	const user_username =JSON.parse(document.getElementById('user-username').textContent);
 	const user_email	=JSON.parse(document.getElementById('user-email').textContent);
+
+	input = document.querySelector('#input');
+
+	input.addEventListener("keyup", function(event) {
+            // Verifica si la tecla presionada es "Enter" (código 13)
+            if (event.keyCode === 13) {
+                // Dispara el evento de clic en el botón
+            	const messageInputDom 	= document.querySelector('#input');
+				const message 			= messageInputDom.value;
+
+				chatSocket.send(JSON.stringify({
+					'message':message,
+					'username':user_username,
+					'email':user_email
+				}));
+
+				messageInputDom.value = '';
+            }
+    });
 
 	document.querySelector('#submit').onclick = function (e) {
 		const messageInputDom 	= document.querySelector('#input');
@@ -101,14 +172,20 @@
 		}
 
 		if (data.type == 'chat_msg'){
-			const username 	= '\n'+data.user_username_ + ' says'
+			const username 	= '\n'+data.user_username_ 
 			role = ''
 
-			if (data.admin == 1){
-				role = ' |admin';
-			};
+		
 
-	 		document.querySelector('#chat-text').value 		+= (username + role +'\n'+data.message_to_group + '\n'+data.time_of_message+'\n');
+	 		//document.querySelector('#chat-text').value 		+= (username + role +'<br>'+data.message_to_group + '<br>'+data.time_of_message+'\n');
+
+	 		var leme = document.getElementById('my');
+	 		var value = leme.dataset.myVariable;
+
+	 		document.querySelector('#chattext-2').innerHTML	+= ('<br>'+username+role+'<br>'+data.message_to_group+'<br>'+data.time_of_message+'<br>');
+
+	 		document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
+
 		}
 
 		if (data.type == 'word_suggest'){
@@ -169,6 +246,12 @@
 		requesting_to_back(url) 
 
 	}
+
+	$(document).ready(function() {
+    	var scrollableDiv = document.getElementById("scrollableDiv");
+    	scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+	});
+
 
 	</script>
 	

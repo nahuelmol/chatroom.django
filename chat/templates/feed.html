@@ -16,21 +16,18 @@
 	</div>
 
 	<div>
-		<h3>Let's create your own chat</h3>
+		<h3>Let's start a chat</h3>
 		<form action="{% url 'saver:chatrooms' %}" method="post">
 			{% csrf_token %}
 			<br>
-			<label>Chatname:</label><br>
+			<label>Title:</label><br>
 			<input type="text" name="chatname"/><br>
 			
-			<label>Author:</label><br>
-			<input type="text" name="author"/><br>
-
 			<button type="submit">Crear chat</button>
 			
 		</form>
 	</div>
-	<a href="{% url 'chatapp:index' %}">Index</a>
+	<a href="{% url 'chatapp:feed' %}">Explore</a>
 	
 </body>
 </html>

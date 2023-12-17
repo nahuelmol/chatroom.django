@@ -28,7 +28,7 @@ class Follower(models.Model):
 
 	date_follow			= models.DateField()
 	user_follower 		= models.ForeignKey(User, on_delete=models.CASCADE)
-	followed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
+	#followed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
 	followed_chatroom	= models.ForeignKey(Chatroom, on_delete=models.CASCADE)
 
 class Subscriber(models.Model):
@@ -37,6 +37,12 @@ class Subscriber(models.Model):
 	subscribed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
 	follower_subscriber	= models.ForeignKey(Follower, on_delete=models.CASCADE)
 	
+class Moderator(models.Model):
+
+	user_moderator	= models.ForeignKey(User, on_delete=models.CASCADE)
+	date_conversion	= models.DateField()
+	
+
 
 class Event(models.Model):
 
