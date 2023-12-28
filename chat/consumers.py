@@ -5,7 +5,9 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from comparator.generator import word_generator
 
 from db.views import create_message
-from comparator.generator import compare_message, word_generator, Msgsender, chatting, command
+from comparator.generator import compare_message, word_generator
+from comparator.generator import Msgsender, chatting, command
+from comparator.generator import BanningPeople, ModeratingPeople
 
 from asgiref.sync import sync_to_async
 
@@ -101,6 +103,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		user_username 	= event['username_event'] #we collect the username too
 		time_message 	= event['time_event']
 
+
+
 		if message[0] == '#':
 			
 			if word._word != ' ':
@@ -126,6 +130,20 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 			frase 	= message.replace('!',"")
 
 			msg = command(word, user_username, frase, time_message)
+
+			await self.send(text_data=json.dumps(msg))
+
+		elif message[0] == '@':
+
+			which  = message.replace('@', "")
+
+			if which == 'ban':
+
+				msg = await BanningPeople(user_username, time_message)
+
+			if which == 'mod':
+
+				msg = await ModeratingPeople(user_username, time_message)
 
 			await self.send(text_data=json.dumps(msg))
 

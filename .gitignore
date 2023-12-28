@@ -1,2 +1,15 @@
 .env
 /docs
+
+/chat/__pycache__
+/chat/api/__pycache__
+/chatroom/__pycache__
+/comparator/__pycache__
+/db/__pycache__
+
+/chat/migrations/
+/chatroom/migrations/
+/db/migrations
+
+
+*.sqlite3

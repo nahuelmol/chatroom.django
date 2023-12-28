@@ -1,33 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hola</title>
+	<title>Feed</title>
+	<link rel="stylesheet" 
+            href="https://bootswatch.com/4/yeti/bootstrap.css">
 </head>
 <body>
-	<div id="content">
-		<h2>Hallo, leute!</h2>
-		<p>There's the index where you can find chat already created, and even you can make yours</p>
+
+	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+  		<div class="container-fluid">
+    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+    			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      			<span class="navbar-toggler-icon"></span>
+    			</button>
+    			<div class="collapse navbar-collapse" id="navbarColor02">
+      				<ul class="navbar-nav me-auto">
+        				<li class="nav-item">
+          					<a class="nav-link active" href="{% url 'chatapp:feed' %}">Feed
+            				<span class="visually-hidden">(current)</span>
+          					</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+        				</li>
+        				<li class="nav-item">
+         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+        				</li>
+       					<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:login' %}">Login</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
+        				</li>
+        				
+      				</ul>
+      				<form class="d-flex">
+        				<input class="form-control me-sm-2" type="search" placeholder="Search">
+        				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      				</form>
+    			</div>
+  		</div>
+	</nav>
+	<div class="container jumbotron" id="content">
+		<h2>Hello! {{ user.username }}</h2>
+		<p>There's the index where you can find chat of the people you follow</p>
 	</div>
-	<div>
-		<h3>next, our chats... </h3>
+	<div class="container">
+		<h3 class="container p-5">next, your chats... </h3>
+
+		{% if messages %}
+    		<ul class="container bg-dark p-5 text-white messages">
+        		{% for message in messages %}
+            		<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        		{% endfor %}
+   			</ul>
+		{% endif %}
+
 		{% for chat in chat_list %}
-			<p>{{ chat.chatroom_name }}</p>
+			<div class="container p-3 bg-primary text-white">
+				<p><dt id="chatname">{{ chat.chatroom_name }}</dt>{{ chat.author }} </p>
+        <input id="" class="btnlink btn-primary" type="button" name="example" value="Go">
+			</div>
+			
 		{% endfor %}
 	</div>
 
-	<div>
+	<div class="container p-5 text-center">
 		<h3>Let's start a chat</h3>
 		<form action="{% url 'saver:chatrooms' %}" method="post">
 			{% csrf_token %}
 			<br>
 			<label>Title:</label><br>
 			<input type="text" name="chatname"/><br>
+			<input type="hidden" name="username" value="{{ user.username }}">
 			
 			<button type="submit">Crear chat</button>
 			
 		</form>
 	</div>
 	<a href="{% url 'chatapp:feed' %}">Explore</a>
+
+  <script type="text/javascript">
+      
+
+      var btnLinks = document.querySelectorAll('.btnlink');
+
+      btnLinks.forEach(function(btnLink) {
+        btnLink.addEventListener('click', function (e) {
+
+
+          var container = e.target.closest('.container');
+          console.log(container)
+
+          var chatName = container.querySelector('#chatname').textContent;
+          var listLink = container.querySelector('#listlink');
+
+          if (chatName) {
+            var url = "{% url 'chatapp:room' room_name='placeholder' %}".replace('placeholder', chatName);
+            window.location.href = url;
+          }
+        });
+      });
+
+  </script>
 	
 </body>
 </html>

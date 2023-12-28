@@ -1,16 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hola</title>
+	<title>Explore</title>
+	<link rel="stylesheet" 
+            href="https://bootswatch.com/4/yeti/bootstrap.css">
 </head>
 <body>
-	<div id="content">
-		<p>Welcone to chat community</p>
+
+	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+  		<div class="container-fluid">
+    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+    			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      			<span class="navbar-toggler-icon"></span>
+    			</button>
+    			<div class="collapse navbar-collapse" id="navbarColor02">
+      				<ul class="navbar-nav me-auto">
+        				<li class="nav-item">
+          					<a class="nav-link active" href="{% url 'chatapp:explore' %}">Explore
+            				<span class="visually-hidden">(current)</span>
+          					</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+        				</li>
+        				<li class="nav-item">
+         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+        				</li>
+       					<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:login' %}">Login</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
+        				</li>
+        				
+      				</ul>
+      				<form class="d-flex">
+        				<input class="form-control me-sm-2" type="search" placeholder="Search">
+        				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      				</form>
+    			</div>
+  		</div>
+	</nav>
+
+	<div class="jumbotron text-center" id="content">
+		<p>Welcome to chat community</p>
 	</div>
 	<div>
-		<h3>Active chats </h3>
+		<h3 class="container-fluid p-3">Active chats </h3>
 		{% for chat in chat_list %}
-			<p>{{ chat.chatroom_name }}</p>
+			<div class="container p-3 bg-primary text-white">
+				<p><dt>{{ chat.chatroom_name }}</dt>{{ chat.author }}</p>
+			</div>
 		{% endfor %}
 	</div>
 

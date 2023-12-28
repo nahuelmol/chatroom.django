@@ -75,6 +75,42 @@ def Msgsender(message, username, time, word):
 
 	return msg
 
+async def ModeratingPeople(username, time):
+
+	admin = 0
+
+	msg_group = "the user " + username + " should be a moderator!"
+
+	print(msg_group)
+
+	obj = {
+		'admin':admin,
+		'message_to_group':msg_group,
+		'user_username_':username,
+		'time_of_message':time,
+		'type':'modded'
+	}
+
+	return obj
+
+async def BanningPeople(username, time):
+
+	admin = 0
+
+	msg_group = "the user " + username + " should be banned!"
+
+	print(msg_group)
+
+	obj = {
+		'admin':admin,
+		'message_to_group':msg_group,
+		'user_username_':username,
+		'time_of_message':time,
+		'type':'banned'
+	}
+
+	return obj
+
 
 async def chatting(username, time, msg):
 	admin 	= 0 

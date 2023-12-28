@@ -4,10 +4,67 @@ from rest_framework import permissions, authentication
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate, logout
 
-from db.models import Chatroom, Follower
+from db.models import Chatroom, Follower, Subscriber
+from db.forms import RegistrationForm
 
 import datetime
+
+class user_register(APIView):
+
+	def post(self, request):
+		form = RegistrationForm(request.POST)
+
+		if form.is_valid():
+			user = form.save()
+			login(resquest, user)
+
+			return redirect('chatapp:feed')
+		else:
+			return redirect('chatapp:register')
+	
+
+		context = {
+			'userdata': 'login page',
+		}
+
+		return render(request, 'register.html', context)
+
+class user_login(APIView):
+
+	def post(self, resquest):
+
+		username = request.data.get('username')
+		password = request.data.get('password')
+
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			login(request, user)
+			return redirect('chatapp:feed')
+		else:
+			return redirect('chatapp:login')
+	
+def findroom(roomname):
+
+	try:
+		chatroom = Chatroom.objects.get(chatroom_name=roomname)
+		return chatroom
+
+	except Chatroom.DoesNotExist:
+		return None
+
+
+def findowner(owner):
+
+	try:
+		user = User.objects.get(username=owner)
+		return user
+	except User.DoesNotExist:
+		return None
+
+
 
 class SaveFollower(APIView):
 
@@ -16,18 +73,22 @@ class SaveFollower(APIView):
 	permission_classes = [
 		permissions.AllowAny]
 
-	def post(self, request):
-
-		print(request.data)
+	def post(self, request, room_name):
 
 		userid 		= request.data.get('id')
 		username 	= request.data.get('username')
 
+		chatroom 	= findroom(room_name)
+		owner 		= findowner(chatroom.author)
+
+		follower = User.objects.get(username=username)
+
+		today 			= datetime.datetime.now()
+		
 		new_follower	= Follower(
-			followed_chatroom=chatroomid,
-			followed_user=chatroom_creator_id,
-			user_follower=userid,
-			date_follow=date)
+			followed_user=owner,
+			user_follower=follower,
+			date_follow=today)
 
 		try:
 			new_follower.save()
@@ -42,7 +103,6 @@ class SaveFollower(APIView):
 			else:
 				return JsonResponse({'mensaje': 'following successful'})
 
-
 class SaveSubscriber(APIView):
 
 	authentication_classes = [
@@ -50,17 +110,22 @@ class SaveSubscriber(APIView):
 	permission_classes = [
 		permissions.AllowAny]
 
-	def post(self, request):
-
-		print(request.data)
+	def post(self, request, room_name):
 
 		userid 		= request.data.get('id')
 		username 	= request.data.get('username')
 
+		chatroom 	= findroom(room_name)
+		owner 		= findowner(chatroom.author)
+
+		subscriber 	= User.objects.get(username=username)
+
+		today 			= datetime.datetime.now()
+
 		new_subscriber	= Subscriber(
-			followed_user=chatroom_creator_id,
-			user_subscriber=userid,
-			date_follow=date)
+			subscribed_user=owner,
+			follower_subscriber=subscriber,
+			date_subs=today)
 
 		try:
 			new_subscriber.save()
@@ -89,32 +154,31 @@ class SaveChatroom(APIView):
 
 		headers = request.META
 		chat 	= request.POST.get('chatname')
-		author 		= request.user.username 
+		user 	= request.POST.get('username')
 
-
-		print("current user: ", request.user.username)
+		print(user)
 
 		chats = []
 		chats = Chatroom.objects.all()
 
 		if chat in chats:
 			messages.add_message(request, messages.INFO, 'this chat name already exists, please choose other')
-			return redirect('chatapp:feed')
+			return redirect('chatapp:explore')
 
 		result 			= datetime.datetime.now()
 		time			= str(result.hour) +':'+str(result.minute)
-		link 			= "http://localhost:8000"+"/"+chat
+		link 			= "http://localhost:8000/chat/room/"+chat
 
 		new_chat = Chatroom(
 			chatroom_name=chat,
 			creation_date=time,
-			author=author,
+			author=user,
 			link_to_join=link,
 			)
 
 		try:
 			new_chat.save()
-			return redirect('chatapp:feed')
+			return redirect('chatapp:explore')
 			
 		except Exception as e:
 
@@ -122,13 +186,13 @@ class SaveChatroom(APIView):
 
 			if new_chat:
 				messages.success(request, 'chatroom created: '+ exe)
-				return redirect('chatapp:feed')
+				return redirect('chatapp:explore')
 			else:
 				messages.success(request, 'chatroom not created: '+ exe)
-				return redirect('chatapp:feed')
+				return redirect('chatapp:explore')
 
 	def get(self, request):
 
 		messages.add_message(request, messages.INFO, 'get request arent allowed')
-		return redirect('chatapp:feed')
+		return redirect('chatapp:explore')
 

@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-	<title>Hello world!</title>
+	<title>Chatroom!</title>
 
 	<style type="text/css">
 
@@ -45,58 +45,141 @@
 	</style>
 </head>
 <body>	
-		<div class="contenedor">
-			<div class="columna">
+
+	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+  		<div class="container-fluid">
+    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+    			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      			<span class="navbar-toggler-icon"></span>
+    			</button>
+    			<div class="collapse navbar-collapse" id="navbarColor02">
+      				<ul class="navbar-nav me-auto">
+        				<li class="nav-item">
+          					<a class="nav-link active" href="{% url 'chatapp:room' room_name='{{ room__name }}' %}">Chat
+            				<span class="visually-hidden">(current)</span>
+          					</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+        				</li>
+        				<li class="nav-item">
+         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+        				</li>
+       					<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:login' %}">Login</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
+        				</li>
+
+        				<li class="nav-item">
+          					<a class="nav-link active" href="{% url 'chatapp:feed' %}">Feed
+          					</a>
+        				</li>
+        				
+      				</ul>
+      				
+    			</div>
+  		</div>
+	</nav>
+		<div style="font-size: 12px;" class="container">
+
+			<div class="row">
+				<div class="container">
+					<div class="col text-white text-center bg-primary">
+						<h2>Chatroom</h2>
+					</div>
+				</div>
 				
 			</div>
-			<div class="columna">
-				<p>Stream</p>
-				<div id="handlebar1"></div>
-				<div>
-					{{ room__name|json_script:"room-name" }}
-					{{ request.user.username|json_script:"user-username" }}
-					{{ request.user.email|json_script:"user-email"}}
-				</div>
 
-				<div>
+			<div class="row">
+				
+				<div class="col">
 
-					{% if is_owner %}
-    					<p>You can manage your chat with... </p>
-    					<div id="my" data-my-variable="{{ is_owner }}"></div>
-						<input id="cleanbtn" type="button" value="Clean chat"><br><br>
-						<input id="addlinkbtn" type="button" value="Add link"><br><br>
-					{% else %}
-    					<p>Enjoy the chat</p>
-    					<input id="followbtn" type="button" value="Follow"><br><br>
-						<input id="donarsubbtn" type="button" value="Donar subs">
-					{% endif %}
+					<div class="columna">
+						<p>Stream</p>
+						<div id="handlebar1"></div>
+						<div>
+							{{ room__name|json_script:"room-name" }}
+							{{ request.user.username|json_script:"user-username" }}
+							{{ request.user.email|json_script:"user-email"}}
+						</div>
+						<p>{{ room__name }}</p>
+
+						<div>
+
+							{% if is_owner %}
+    							<p>You can manage your chat with... </p>
+    							<div id="my" data-my-variable="{{ is_owner }}"></div>
+								<input id="cleanbtn" type="button" value="Clean chat"><br><br>
+								<input id="addlinkbtn" type="button" value="Add link"><br><br>
+							{% else %}
+    							<p>Enjoy the chat</p>
+    							<input id="followbtn" type="button" value="Follow"><br><br>
+
+    							<input id="subsbtn" type="button" value="Subscribe"><br><br>
+								<input id="donarsubbtn" type="button" value="Donar subs">
+							{% endif %}
+					
+						</div>
+					</div>
 					
 				</div>
-			</div>
-			<div class="columna">
-				<p>Chat</p>
-				<div class="content">
-					</br>
-					<div class="jumbotron taman" id="chattext-2">
-						{% for each in messages %}
-							<br>
-							{% if is_owner %}
-								{{ each.author }} 
-							{% else %}
-								{{ each.author }}
-							{% endif %}
-							<br>
-							{{ each.content }}
-							<br>
-							{{ each.creation_date }}
-							<br>
-						{% endfor %}
+ 				<div class="col">
+ 					
+ 					<div class="columna">
+						<p>Chat</p>
+						<div class="content">
+						</br>
+							<div class="jumbotron taman" id="chattext-2">
+							{% for each in messages %}
+								<br>
+								{% if is_owner %}
+									{{ each.author }} 
+								{% else %}
+									{{ each.author }}
+								{% endif %}
+								<br>
+								{{ each.content }}
+								<br>
+								{{ each.creation_date }}
+								<br>
+							{% endfor %}
 						
-					</div></br>
-					<input id="input" type="text" size="30"></br>
-					<input id="submit" type="button" value="Send">
-				</div>
+							</div></br>
+							<input id="input" type="text" size="30"></br>
+							<input id="submit" type="button" value="Send">
+						</div>
+					</div>
+
+ 				</div>
+
+ 				{% if is_owner %}
+ 				<div class="col ">
+ 					<div class="text-center">Banner</div>
+ 					
+ 					<div class="jumbotron">
+ 						<p>Below you can ban someone in the chat, put his name here</p>
+ 					</div>
+
+ 					<div class="container">
+ 						<input id="usertoban" type="text" name="User">
+ 						<input id="submitban" type="button" value="Ban">
+ 					</div>
+ 					</br>
+ 					<div class="container">
+ 						<p><dt>Make an user moderator</dt></p>
+ 						<input id="usertomod" type="text" name="User">
+ 						<input id="submitmod" type="button" value="Mod">
+ 					</div>
+ 				</div>
+ 				{% endif %}
+
 			</div>
+			
+			
+			
 
 		</div>
 		
@@ -112,7 +195,7 @@
 
 	<script type="text/javascript">
 	var local_host 	= window.location.host;
-	var red_host 	= '192.168.0.103:8080';
+	var red_host 	= '192.168.1.38:3000';
 
 	const roomName 		=JSON.parse(document.getElementById('room-name').textContent);
 	const user_username =JSON.parse(document.getElementById('user-username').textContent);
@@ -150,8 +233,44 @@
 		messageInputDom.value = '';
 	}
 
+	var submitban = document.querySelector('#submitban');
+
+	if (submitban) {
+    	followBtn.onclick = function (e) {
+        	const input = document.querySelector('#usertoban');
+			const usertoban = input.value;
+
+			chatSocket.send(JSON.stringify({
+				'message':'@ban',
+				'username':usertoban,
+				'email':user_email
+			}))
+
+			input.value = '';
+    	}
+	}
+
+	var submitmod = document.querySelector('#submitmod')
+
+	if (submitmod) {
+		submitmod.onclick = function (e) {
+			const input = document.querySelector('#usertomod');
+			const usertomod = input.value;
+
+			chatSocket.send(JSON.stringify({
+				'message':'@mod',
+				'username':usertomod,
+				'email':user_email
+			}))
+
+			input.value = '';
+		}
+
+	}
+	
+
 	const chatSocket 	= new WebSocket(
-		'ws://'+ local_host + '/ws/chat/'+ roomName + '/');
+		'ws://'+ red_host + '/ws/chat/'+ roomName + '/');
 	
 	chatSocket.onmessage = function (e){
 
@@ -175,13 +294,6 @@
 			const username 	= '\n'+data.user_username_ 
 			role = ''
 
-		
-
-	 		//document.querySelector('#chat-text').value 		+= (username + role +'<br>'+data.message_to_group + '<br>'+data.time_of_message+'\n');
-
-	 		var leme = document.getElementById('my');
-	 		var value = leme.dataset.myVariable;
-
 	 		document.querySelector('#chattext-2').innerHTML	+= ('<br>'+username+role+'<br>'+data.message_to_group+'<br>'+data.time_of_message+'<br>');
 
 	 		document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
@@ -194,7 +306,12 @@
 		}
 
 		if (data.type == 'banned'){
-			const username 	= '\n'+data.user_username_ + ' suggested'
+			const username 	= '\n'+data.user_username_ + ' banned'
+	 		document.querySelector('#chat-text').value 		+= (data.message_to_group);
+		}
+
+		if (data.type == 'modded'){
+			const username 	= '\n'+data.user_username_ + ' moderator'
 	 		document.querySelector('#chat-text').value 		+= (data.message_to_group);
 		}
 
@@ -205,7 +322,11 @@
 
 	}
 
-	const requesting_to_back = (url) => {
+	const requesting_to_back = (url, usuario) => {
+
+		var chat = '{{ room__name }}'
+
+		console.log(url)
 
 		fetch(url, {
     		method: 'POST',
@@ -229,27 +350,42 @@
   		});
 	}
 
-	document.querySelector('#followbtn').onclick = function (e) {
+	var followbtn = document.querySelector('#followbtn');
 
-		var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
-		var url = "{% url 'saver:followers' %}";
+	if(followbtn){
+		followbtn.onclick = function (e) {
 
-		requesting_to_back(url)  		
+			var room = '{{ room__name|urlencode }}';
+			var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
 
+			var url = "{% url 'saver:followers' room_name='placeholder' %}".replace('placeholder', room);
+
+			requesting_to_back(url, usuario)  		
+
+		}
 	}
 
-	document.querySelector('#subscribebtn').onclick = function (e) {
+	var subsbtn = document.querySelector('#subsbtn');
 
-		var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
-		var url = "{% url 'saver:subscribers' %}";
+	if(subsbtn) {
+		subsbtn.onclick = function (e) {
 
-		requesting_to_back(url) 
+			var room = '{{ room__name|urlencode }}'
+			var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
+			
+			var url = "{% url 'saver:subscribers' room_name='placeholder' %}".replace('placeholder', room);
+
+			requesting_to_back(url, usuario) 
+		}
 
 	}
-
+	
 	$(document).ready(function() {
     	var scrollableDiv = document.getElementById("scrollableDiv");
-    	scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+
+    	if(scrollableDiv){
+    		scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+    	}
 	});
 
 

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Chatroom(models.Model):
+
 	chatroom_name 	= models.CharField(max_length=30)
 	creation_date  	= models.CharField(max_length=30)
 	author			= models.CharField(max_length=30)
@@ -27,20 +28,40 @@ class Encuesta(models.Model):
 class Follower(models.Model):
 
 	date_follow			= models.DateField()
-	user_follower 		= models.ForeignKey(User, on_delete=models.CASCADE)
-	#followed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
-	followed_chatroom	= models.ForeignKey(Chatroom, on_delete=models.CASCADE)
+	user_follower 		= models.ForeignKey(
+											User, 
+											on_delete=models.CASCADE,
+											related_name='follower')
+
+	followed_user		= models.ForeignKey(
+											User, 
+											on_delete=models.CASCADE,
+											related_name='follow_to')
 
 class Subscriber(models.Model):
 
 	date_subs			= models.DateField()
-	subscribed_user		= models.ForeignKey(User, on_delete=models.CASCADE)
-	follower_subscriber	= models.ForeignKey(Follower, on_delete=models.CASCADE)
+	
+	follower_subscriber	= models.ForeignKey(
+											User, 
+											on_delete=models.CASCADE,
+											related_name='subscriber')
+	subscribed_user		= models.ForeignKey(
+											User, 
+											on_delete=models.CASCADE,
+											related_name='subscribe_to')
 	
 class Moderator(models.Model):
+	date_conversion		= models.DateField()
 
-	user_moderator	= models.ForeignKey(User, on_delete=models.CASCADE)
-	date_conversion	= models.DateField()
+	user_moderator		= models.ForeignKey(
+										User, 
+										on_delete=models.CASCADE,
+										related_name='moderator')
+	user_to_modearate	= models.ForeignKey(
+										User,
+										on_delete=models.CASCADE,
+										related_name='moderate_to')
 	
 
 

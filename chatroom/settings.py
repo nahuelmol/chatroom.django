@@ -7,7 +7,13 @@ SECRET_KEY = '9i03(slfzo^4%=si+$1wi_9aq_c1jfbspo8t2vjgthwg4ef28z'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.103','localhost']
+ALLOWED_HOSTS = ['192.168.0.103','localhost','192.168.1.38']
+CHANNELS_ALLOWED_HOSTS = ['localhost', '192.168.1.38']
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",  # Agrega tu dirección IP o nombre de dominio aquí
+    "http://192.168.1.38:3000",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

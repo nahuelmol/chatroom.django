@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login</title>
+	<title>Logout</title>
 	<link rel="stylesheet" 
             href="https://bootswatch.com/4/yeti/bootstrap.css">
 </head>
@@ -15,7 +15,7 @@
     			<div class="collapse navbar-collapse" id="navbarColor02">
       				<ul class="navbar-nav me-auto">
         				<li class="nav-item">
-          					<a class="nav-link active" href="{$ url 'chatapp:login' $}">Login
+          					<a class="nav-link active" href="{$ url 'chatapp:logout' $}">Logout
             				<span class="visually-hidden">(current)</span>
           					</a>
         				</li>
@@ -23,7 +23,7 @@
           					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
         				</li>
         				<li class="nav-item">
-         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+         					<a class="nav-link" href="{% url 'chatapp:login' %}">Login</a>
         				</li>
        					<li class="nav-item">
           					<a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
@@ -51,8 +51,8 @@
 	
 
 	<div class="container p-5 text-center">
-		<h3>Login!</h3>
-		<form action="{% url 'saver:login' %}" method="post">
+		<h3>Logout</h3>
+		<form action="{% url 'saver:chatrooms' %}" method="post">
 			{% csrf_token %}
 			<br>
 			<label>Title:</label><br>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Profile</title>
+	<link rel="stylesheet" 
+            href="https://bootswatch.com/4/yeti/bootstrap.css">
+  <style>
+    .hidden {
+        display: none;
+    }
+  </style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+  		<div class="container-fluid">
+    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+    			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      			<span class="navbar-toggler-icon"></span>
+    			</button>
+    			<div class="collapse navbar-collapse" id="navbarColor02">
+      				<ul class="navbar-nav me-auto">
+        				<li class="nav-item">
+          					<a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
+            				<span class="visually-hidden">(current)</span>
+          					</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+        				</li>
+        				<li class="nav-item">
+         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+        				</li>
+       					<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
+        				</li>
+        				<li class="nav-item">
+          					<a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
+        				</li>
+        				
+      				</ul>
+      				
+    			</div>
+  		</div>
+	</nav>
+
+	<div class="container">
+
+    <p><dt>Followers: </dt>{{ followers }}</p> 
+    <p><dt>Followeds: </dt>{{ followeds }}</p>
+    <p><dt>Chatrooms: </dt>{{ chatrooms }}</p>
+		
+	</div>
+
+  <div class="container">
+    <button id="follower_show">Show Followers</button>
+    <div id="follower_seccion" class="hidden">
+      {% for fwer in frs_list %}
+        <div class="container p-3 bg-primary text-white">
+          <p><dt>{{ fwer.username }}</dt></p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button id="followed_show">Show Followeds</button>
+    <div id="followed_seccion" class="hidden">
+      {% for fwed in fds_list %}
+        <div class="container p-3 bg-primary text-white">
+          <p><dt>{{ fwed.username }}</dt></p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('follower_show').addEventListener('click', function() {
+        var seccion = document.getElementById('follower_seccion');
+        seccion.style.display = (seccion.style.display === 'none' || seccion.style.display === '') ? 'block' : 'none';
+    });
+
+    document.getElementById('followed_show').addEventListener('click', function() {
+        var seccion = document.getElementById('followed_seccion');
+        seccion.style.display = (seccion.style.display === 'none' || seccion.style.display === '') ? 'block' : 'none';
+    });
+</script>
+
+
+</body>
+</html>
