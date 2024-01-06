@@ -54,27 +54,32 @@
     			</button>
     			<div class="collapse navbar-collapse" id="navbarColor02">
       				<ul class="navbar-nav me-auto">
-        				<li class="nav-item">
-          					<a class="nav-link active" href="{% url 'chatapp:room' room_name='{{ room__name }}' %}">Chat
-            				<span class="visually-hidden">(current)</span>
-          					</a>
-        				</li>
-        				<li class="nav-item">
-          					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
-        				</li>
-        				<li class="nav-item">
-         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
-        				</li>
+                {% if user %}
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+                  </li>
+
+                {% else %}
+
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
+                    <span class="visually-hidden">{{ user }}</span>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+                  </li>
+
+                {% endif %}
+        				
+        				
        					<li class="nav-item">
-          					<a class="nav-link" href="{% url 'chatapp:login' %}">Login</a>
+          					<a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
         				</li>
         				<li class="nav-item">
           					<a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
-        				</li>
-
-        				<li class="nav-item">
-          					<a class="nav-link active" href="{% url 'chatapp:feed' %}">Feed
-          					</a>
         				</li>
         				
       				</ul>
@@ -116,10 +121,22 @@
 								<input id="addlinkbtn" type="button" value="Add link"><br><br>
 							{% else %}
     							<p>Enjoy the chat</p>
-    							<input id="followbtn" type="button" value="Follow"><br><br>
+
+							{% endif %}
+
+							{% if is_follower %}
 
     							<input id="subsbtn" type="button" value="Subscribe"><br><br>
+
+							{% else %}
+
+    							<input id="followbtn" type="button" value="Follow"><br><br>
+
+							{% endif %}
+
+							{% if is_subcriber %}
 								<input id="donarsubbtn" type="button" value="Donar subs">
+								
 							{% endif %}
 					
 						</div>

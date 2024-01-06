@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Profile</title>
+  {% if user %}
+    <title> {{ user.username }}</title>
+  {% else %}  
+    <title> Profile: </title>
+  {% endif %}
+
 	<link rel="stylesheet" 
             href="https://bootswatch.com/4/yeti/bootstrap.css">
   <style>
@@ -13,23 +18,35 @@
 <body>
 	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   		<div class="container-fluid">
-    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+          {% if user %}
+            <a class="navbar-brand" href="{% url 'chatapp:profile' %}">{{ user.username }}</a>
+          {% endif %}
     			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       			<span class="navbar-toggler-icon"></span>
     			</button>
     			<div class="collapse navbar-collapse" id="navbarColor02">
       				<ul class="navbar-nav me-auto">
-        				<li class="nav-item">
-          					<a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
-            				<span class="visually-hidden">(current)</span>
-          					</a>
-        				</li>
-        				<li class="nav-item">
-          					<a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
-        				</li>
-        				<li class="nav-item">
-         					<a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
-        				</li>
+                {% if user %}
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+                  </li>
+
+                {% else %}
+
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
+                    <span class="visually-hidden">{{ user }}</span>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+                  </li>
+
+                {% endif %}
+        				
+        				
        					<li class="nav-item">
           					<a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
         				</li>
@@ -52,7 +69,7 @@
 	</div>
 
   <div class="container">
-    <button id="follower_show">Show Followers</button>
+    <button class="btn btn-primary" id="follower_show">Show Followers</button>
     <div id="follower_seccion" class="hidden">
       {% for fwer in frs_list %}
         <div class="container p-3 bg-primary text-white">
@@ -61,7 +78,7 @@
       {% endfor %}
     </div>
 
-    <button id="followed_show">Show Followeds</button>
+    <button class="btn btn-primary" id="followed_show">Show Followeds</button>
     <div id="followed_seccion" class="hidden">
       {% for fwed in fds_list %}
         <div class="container p-3 bg-primary text-white">

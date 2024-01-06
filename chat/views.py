@@ -140,8 +140,29 @@ def feed(request):
 def room(request, room_name):
 	array 		= []
 	msg_array 	= []
+	queryset 	= []
+
 	currentuser = request.user.username
 	is_owner 	= False
+	is_follower = False
+	is_subscriber = False
+
+	USERlogged 		= User.objects.get(username=currentuser)
+	CHATROOM 		= Chatroom.objects.get(chatroom_name=room_name)
+	USERowner 		= User.objects.get(username=CHATROOM.author)
+
+	followerREL 	= Follower.objects.filter(user_follower=USERlogged)
+	subscriberREL 	= Subscriber.objects.filter(follower_subscriber=USERlogged)
+
+	for each in followerREL:
+		if(each.followed_user == USERowner):
+			print('the current user is follower of the current chat')
+			is_follower = True
+
+	for each in subscriberREL:
+		if(each.subscribed_use == USERowner):
+			print('the current user is subscriber of the current chat')
+			is_subscriber = False
 
 	for each in Chatroom.objects.all():
 		array.append(each.chatroom_name)
@@ -161,7 +182,8 @@ def room(request, room_name):
 
 	context = {	'room__name':room_name,
 				'messages':msg_array,
-				'is_owner':is_owner
+				'is_owner':is_owner,
+				'is_follower':is_follower,
 		}
 
 	return render(request, 'chatroom.html', context)
