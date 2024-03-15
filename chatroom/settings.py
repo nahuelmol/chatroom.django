@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     #'mytests',
     'db',
     'accounts',
-    'rest_framework_swagger',
+    'drf_yasg',
     'corsheaders',
 ]
 

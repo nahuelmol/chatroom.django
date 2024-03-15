@@ -1,5 +1,6 @@
 .env
 /docs
+/venv
 
 /chat/__pycache__
 /chat/api/__pycache__
@@ -11,5 +12,6 @@
 /chatroom/migrations/
 /db/migrations
 
+/.__pycache__
 
 *.sqlite3

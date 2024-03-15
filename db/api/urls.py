@@ -1,6 +1,4 @@
 from rest_framework import routers
-
-from django.conf.urls import url
 from django.urls import include, path
 
 from db.api.views import EventList, PostDetail, CommentDetail, EventDetail

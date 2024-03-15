@@ -1,0 +1,6 @@
+django==5.0.3
+djangorestframework==3.14.0
+channels==4.0.0
+drf-yasg
+django-cors-headers
+djangorestframework-jwt
