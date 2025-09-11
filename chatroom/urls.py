@@ -20,12 +20,11 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/',  	admin.site.urls),
     
-    path('chat/',   	include('chat.urls', namespace='chatapp')),
-    path('create/',		include('chat.api.urls', namespace='saver')),
+    path('player/', 	include(('accounts.urls'), namespace='accounts')),
 
-    path('player/', 	include(('accounts.api.urls', 'accountapp'), namespace='instance_name')),
-    path('prove/',  	LoginView.as_view()),
+    path('chat/',   	include('chat.urls', namespace='chatviews')),
+    path('chat/api/',   include(('chat.api.urls', 'chatapi'), namespace='instance_name')),
+
     path('db/', 		include('db.api.urls')),
     path('swagger/', 	schema_view.with_ui('swagger', cache_timeout=0), name='schema-swg-ui'),
-
 ]

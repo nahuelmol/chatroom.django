@@ -1,45 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Logout</title>
+	<title>Create chat</title>
 	<link rel="stylesheet" 
             href="https://bootswatch.com/4/yeti/bootstrap.css">
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   		<div class="container-fluid">
-    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+                <a class="navbar-brand" href="{% url 'accounts:profile' %}">Profile</a>
     			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       			<span class="navbar-toggler-icon"></span>
     			</button>
     			<div class="collapse navbar-collapse" id="navbarColor02">
               <ul class="navbar-nav me-auto">
-                {% if user %}
-
+                  {% if user %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+                    <a class="nav-link" href="">Logout</a>
                   </li>
-
-                {% else %}
+                  {% else %}
 
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
+                    <a class="nav-link active" href="">Login
                     <span class="visually-hidden">{{ user }}</span>
                     </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+                    <a class="nav-link" href="">Register</a>
                   </li>
 
                 {% endif %}
                 
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
+                    <a class="nav-link" href="">Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
+                    <a class="nav-link" href="">Explore</a>
                 </li>
                 
               </ul>
@@ -56,21 +54,22 @@
         		{% endfor %}
    			</ul>
 		{% endif %}
-
 	</div>
-	
 
 	<div class="container p-5 text-center">
-		<h3>Logout</h3>
-		<form action="{% url 'saver:chatrooms' %}" method="post">
+		<h3>Create a chat</h3>
+        <form action="{% url 'chatapi:save' %}" method="post">
 			{% csrf_token %}
 			<br>
-			<label>Title:</label><br>
-			<input type="text" name="chatname"/><br>
-			<input type="text" name="password"><br>
-			
-			<button class="btn" type="submit">Login</button>
-			
+			<label>Chatname:</label><br>
+            <input type="text" name="chatname"/><br>
+			<label>Email:</label><br>
+            <input type="text" name="email"/><br>
+			<label>Password:</label><br>
+            <input type="text" name="password1"><br>
+			<label>Repeat password:</label><br>
+            <input type="text" name="password2"><br>
+			<button class="btn" type="submit">Create</button>
 		</form>
 	</div>
 
