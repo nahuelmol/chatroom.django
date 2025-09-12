@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, authentication
+from rest_framework.authtoken.models import Token
 
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -9,6 +10,8 @@ from django.contrib.auth import login, authenticate, logout
 
 from db.models import Chatroom, Follower, Subscriber
 from db.forms import RegistrationForm
+
+from accounts.utils import token_required
 
 import datetime
 	
@@ -96,19 +99,21 @@ class SaveChatroom(APIView):
     def post(self, request):
         headers = request.META
         chat 	= request.POST.get('chatname')
-        user 	= request.user
         chats   = []
         chats   = Chatroom.objects.all()
 
+        key     = request.COOKIES.get("access_token")
+        token   = Token.objects.get(key=key)
+        user    = token.user
+
         if chat in chats:
-                messages.add_message(request, messages.INFO, 'hello')
-                return redirect('chatviews:create')
+            messages.add_message(request, messages.INFO, 'hello')
+            return redirect('chatviews:create')
 
         result 			= datetime.datetime.now()
         time			= str(result.hour) +':'+str(result.minute)
         link 			= "http://localhost:8000/chat/room/"+chat
 
-        print('\ncookies:\n', request.COOKIES)
         new_chat = Chatroom(
             chatroom_name=chat,
             creation_date=time,

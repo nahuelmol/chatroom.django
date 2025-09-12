@@ -48,7 +48,7 @@
 
 	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   		<div class="container-fluid">
-    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+    			<a class="navbar-brand" href="{% url 'accounts:profile' %}">Profile</a>
     			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       			<span class="navbar-toggler-icon"></span>
     			</button>
@@ -57,51 +57,37 @@
                 {% if user %}
 
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+                    <a class="nav-link" href="{% url 'accountapi:logout' %}">Logout</a>
                   </li>
 
                 {% else %}
-
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
+                    <a class="nav-link active" href="{% url 'accounts:login' %}">Login
                     <span class="visually-hidden">{{ user }}</span>
                     </a>
                   </li>
 
+
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
                   </li>
 
                 {% endif %}
-        				
-        				
-       					<li class="nav-item">
-          					<a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
-        				</li>
-        				<li class="nav-item">
-          					<a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
-        				</li>
-        				
       				</ul>
-      				
     			</div>
   		</div>
 	</nav>
 		<div style="font-size: 12px;" class="container">
-
 			<div class="row">
 				<div class="container">
 					<div class="col text-white text-center bg-primary">
 						<h2>Chatroom</h2>
 					</div>
 				</div>
-				
 			</div>
 
 			<div class="row">
-				
 				<div class="col">
-
 					<div class="columna">
 						<p>Stream</p>
 						<div id="handlebar1"></div>
@@ -194,17 +180,8 @@
  				{% endif %}
 
 			</div>
-			
-			
-			
-
 		</div>
-		
-
 		<div><p id="welcomemsg"></p></div>
-
-		
-	
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -250,10 +227,16 @@
 		messageInputDom.value = '';
 	}
 
-	var submitban = document.querySelector('#submitban');
+    var followbtn = document.querySelector('#follwbtn')
+    if (followbtn){
+        followbtn.onclick = function (e) {
+            console.log('hello')
+        }
+    }
 
+	var submitban = document.querySelector('#submitban');
 	if (submitban) {
-    	followBtn.onclick = function (e) {
+    	submitban.onclick = function (e) {
         	const input = document.querySelector('#usertoban');
 			const usertoban = input.value;
 
@@ -268,7 +251,6 @@
 	}
 
 	var submitmod = document.querySelector('#submitmod')
-
 	if (submitmod) {
 		submitmod.onclick = function (e) {
 			const input = document.querySelector('#usertomod');
@@ -375,8 +357,7 @@
 			var room = '{{ room__name|urlencode }}';
 			var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
 
-			var url = "{% url 'saver:followers' room_name='placeholder' %}".replace('placeholder', room);
-
+			var url = "{% url 'chatapi:followers' name='placeholder' %}".replace('placeholder', room);
 			requesting_to_back(url, usuario)  		
 
 		}
@@ -390,7 +371,7 @@
 			var room = '{{ room__name|urlencode }}'
 			var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
 			
-			var url = "{% url 'saver:subscribers' room_name='placeholder' %}".replace('placeholder', room);
+			var url = "{% url 'chatapi:subs' name='placeholder' %}".replace('placeholder', room);
 
 			requesting_to_back(url, usuario) 
 		}

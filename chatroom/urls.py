@@ -21,10 +21,10 @@ urlpatterns = [
     path('admin/',  	admin.site.urls),
 
     path('player/', 	include(('accounts.urls'), namespace='accounts')),
-    path('player/api/', include(('accounts.api.urls', 'accountapi'), namespace='instance_name')),
+    path('player/api/', include(('accounts.api.urls'), namespace='accountapi')),
 
     path('chat/',   	include('chat.urls', namespace='chatviews')),
-    path('chat/api/',   include(('chat.api.urls', 'chatapi'), namespace='instance_name')),
+    path('chat/api/',   include('chat.api.urls', namespace='chatapi')),
 
     path('db/', 		include('db.api.urls')),
     path('swagger/', 	schema_view.with_ui('swagger', cache_timeout=0), name='schema-swg-ui'),

@@ -7,18 +7,21 @@ from django.contrib.auth import login, authenticate, logout
 
 from django.http import HttpResponse
 
+from rest_framework.authtoken.models import Token
 from rest_framework import authentication
+
 from itertools import chain
 
 from db.models import Chatroom, Message, Follower, Subscriber
 from db.views import create_chatroom
 from accounts.utils import token_required
 
-#@login_required(login_url='accounts:login')
+def about(request):
+    context = {}
+    return render(request, 'about.html', context)
 
 @token_required
 def create(request):
-    print('\nCOOKIES: \n', request.COOKIES)
     context = {}
     return render(request, 'create.html', context)
 
@@ -45,18 +48,22 @@ def feed(request):
 	}
 	return render(request, 'feed.html', context) 
 
-@login_required(login_url='accounts:login')
+@token_required
 def room(request, name):
     array       = []
     msg_array 	= []
     queryset 	= []
 
-    currentuser = request.user.username
     is_owner 	= False
     is_follower = False
     is_subscriber = False
 
-    USERlogged 		= User.objects.get(username=currentuser)
+    token = request.COOKIES.get("access_token")
+    if token:
+        tokn = Token.objects.get(key=token)
+        user = tokn.user
+        USERlogged 		= User.objects.get(username=user.username)
+
     CHATROOM 		= Chatroom.objects.get(chatroom_name=name)
     USERowner 		= User.objects.get(username=CHATROOM.author)
 
@@ -77,16 +84,13 @@ def room(request, name):
         array.append(each.chatroom_name)
 
     if not (name in array):
-        return redirect('chatapp:feed')
+        return redirect('chatviews:about')
 
     for each in Message.objects.all():
         if each.chatroom == 'chat_'+ name:
             msg_array.append(each)
 
-    chatroom 	= Chatroom.objects.get(chatroom_name=name)
-    author 		= chatroom.author
-
-    if (currentuser == author):
+    if (user.username == CHATROOM.author):
         is_owner = True
 
     context = {	'room__name':name,

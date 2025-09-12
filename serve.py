@@ -10,7 +10,6 @@ ENV  = os.getenv('ENVIRONMENT')
 HOST = ''
 PORT = os.getenv('PORT')
 
-print('env: ', ENV)
 if ENV == 'development':
     HOST = socket.gethostbyname(socket.gethostname()) 
     print('on host: {}:{}'.format(HOST, PORT)) 

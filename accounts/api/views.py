@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from rest_framework.authtoken.models import Token
@@ -34,71 +35,69 @@ class LoginView(APIView):
         if user:
             user_access_token = generate_access_token(user)
             if user_access_token:
-                response = redirect(headers.get('HTTP_REFERER', '/'))
+                response = redirect('chatviews:create')
                 response.set_cookie(key='access_token', value=user_access_token, httponly=True)
                 defaults = { "key":user_access_token }
                 obj, created = Token.objects.update_or_create(user=user, defaults=defaults)
                 return response
 
-            response = redirect(headers.get('HTTP_REFERER'),'/')
+            response = redirect('chatviews:login')
             return response
         else:
-            response = redirect(headers.get('HTTP_REFERER', '/'),status=status.HTTP_400_BAD_REQUEST)
+            response = redirect('chatviews:login', status=status.HTTP_400_BAD_REQUEST)
             return response
 
 class RegisterView(APIView):
-	authentication_classes = [
+    authentication_classes = [
 		authentication.TokenAuthentication]
-	permission_classes = [
+    permission_classes = [
 		permissions.AllowAny]
 
-	def post(self, request):
-		headers 	= request.META
-		email_ 		= request.data.get('email')
-		username_ 	= request.data.get('username')
-		pass_ 		= request.data.get('password')
+    def post(self, request):
+        headers 	= request.META
+        email_ 		= request.data.get('email')
+        username_ 	= request.data.get('username')
+        pass_ 		= request.data.get('password')
 
-		new_user = User(
+        new_user = User(
 				email=email_,
 				username=username_
 				)
-		new_user.set_password(pass_)
-		new_user.save()
+        new_user.set_password(pass_)
+        new_user.save()
 
-		if new_user:
-			access_token = generate_access_token(new_user)
-			if access_token:
-				response = redirect(headers.get('HTTP_REFERER', '/'))
-				response.set_cookie(key='access_token', value=access_token)
-				response.data = {'access_token': 'created'}
-		
-				return response
-			else:
-				response = redirect(headers.get('HTTP_REFERER', '/'))
-				response.data = {'access_token':'was not created'}
-				return response
-		else:
-			response = redirect(headers.get('HTTP_REFERER', '/'))
-			response.data = {'user':'there is no such user'}
-			return response
+        if new_user:
+            access_token = generate_access_token(new_user)
+            if access_token:
+                response = redirect('chatviews:create')
+                response.set_cookie(key='access_token', value=access_token)
+                defaults = { "key":user_access_token }
+                obj, created = Token.objects.update_or_create(user=new_user, defaults=defaults)
+                return response
+            else:
+                response = redirect('chatviews:register')
+                return response
+        else:
+            response = redirect('chatviews:register')
+            return response
 
 class UserLogout(APIView):
-	authentication_classes 	= [
+    authentication_classes 	= [
 		authentication.TokenAuthentication]
-	permission_classes 		= [
+    permission_classes 		= [
 		permissions.AllowAny]
 
-	def get(self, request):
-		user_token  = request.COOKIES.get('access_token', None)
-		headers 	= request.META
+    def get(self, request):
+        user_token  = request.COOKIES.get('access_token', None)
+        headers 	= request.META
 
-		if user_token:
-			response = redirect(headers.get('HTTP_REFERER', '/login'))
-			response.delete_cookie('access_token')
-			return response 
-		response = redirect(headers.get('HTTP_REFERER', '/homepage'))
-		return response
+        if user_token:
+            response = redirect('chatviews:login')
+            response.delete_cookie('access_token')
+            return response
+        else:
+            return redirect('chatviews:about')
 
 class UserViewSet(viewsets.ModelViewSet):
-	queryset = User.objects.all()
-	serializer_class = UserSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

@@ -8,7 +8,7 @@ router = routers.SimpleRouter()
 urlpatterns = [
 	path('create/',						SaveChatroom.as_view(), name='save'),
 	path('follow/<str:name>/',			SaveFollower.as_view(), name='followers'),
-	path('subscribe/<str:name>', 		SaveSubscriber.as_view(), name='subscribers'),
+	path('subscribe/<str:name>', 		SaveSubscriber.as_view(), name='subs'),
 ]
 
 urlpatterns += router.urls
