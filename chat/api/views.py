@@ -11,17 +11,6 @@ from db.models import Chatroom, Follower, Subscriber
 from db.forms import RegistrationForm
 
 import datetime
-
-class user_login(APIView):
-	def post(self, resquest):
-		username = request.data.get('username')
-		password = request.data.get('password')
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			login(request, user)
-			return redirect('chatapp:feed')
-		else:
-			return redirect('chatapp:login')
 	
 def findroom(roomname):
 	try:
@@ -119,15 +108,16 @@ class SaveChatroom(APIView):
         time			= str(result.hour) +':'+str(result.minute)
         link 			= "http://localhost:8000/chat/room/"+chat
 
+        print('\ncookies:\n', request.COOKIES)
         new_chat = Chatroom(
             chatroom_name=chat,
             creation_date=time,
-            author=user,
+            author=user.username,
             link_to_join=link,)
 
         try:
             new_chat.save()
-            return redirect('chatviews:create')
+            return redirect('chatviews:room', name=chat)
 			
         except Exception as e:
             exe = str(e)
@@ -140,5 +130,5 @@ class SaveChatroom(APIView):
 
     def get(self, request):
         messages.add_message(request, messages.INFO, 'get request arent allowed')
-        return redirect('chatapp:explore')
+        return redirect('chatapp:create')
 

@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth import logout
+from django import forms
+
 from rest_framework import authentication
 from itertools import chain
 
@@ -25,11 +28,7 @@ def register(request):
 	return render(request, 'register.html', context)
 
 def login(request):
-	username = request.user.username
-	userdata = User.objects.get(username=username)
-	context = {
-		'userdata': userdata,
-	}
+	context = {}
 	return render(request, 'login.html', context)
 
 @login_required(login_url='/admin/')
@@ -66,11 +65,4 @@ def profile(request):
 		'frs_list':users_followers,
 	}
 	return render(request, 'profile.html', context) 
-
-@login_required(login_url='/admin/')
-def logout(request):
-	username = request.user.username
-	userdata = User.objects.get(username=username)
-	context = { 'userdata': userdata }
-	return render(request, 'logout.html', context)
 

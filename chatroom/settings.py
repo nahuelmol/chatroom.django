@@ -7,6 +7,8 @@ SECRET_KEY = '9i03(slfzo^4%=si+$1wi_9aq_c1jfbspo8t2vjgthwg4ef28z'
 
 DEBUG = True
 
+SESSION_COOKIE_DOMAIN = None  # usa el dominio exacto del request
+
 ALLOWED_HOSTS = ['192.168.0.103','localhost','192.168.1.38', '192.168.1.40']
 CHANNELS_ALLOWED_HOSTS = ['localhost', '192.168.1.38', '192.168.1.40']
 

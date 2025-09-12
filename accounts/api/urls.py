@@ -5,7 +5,7 @@ from django.urls import include, path
 
 from rest_framework.authentication import TokenAuthentication
 
-app_name = 'accountapp'
+app_name = 'accountapi'
 router = routers.SimpleRouter()
 
 login_view		= LoginView.as_view()
@@ -13,9 +13,9 @@ logout_view 	= UserLogout.as_view()
 register_view 	= RegisterView.as_view()
 
 urlpatterns = [
-	path('login/',		login_view),
-	path('logout/',		logout_view),
-	path('register/',	register_view)
+	path('login/',		login_view,     name='login'),
+	path('logout/',		logout_view,    name='logout'),
+	path('register/',	register_view,  name='register')
 ]
 
 urlpatterns += router.urls

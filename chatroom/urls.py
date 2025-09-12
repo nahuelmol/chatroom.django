@@ -19,8 +19,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/',  	admin.site.urls),
-    
+
     path('player/', 	include(('accounts.urls'), namespace='accounts')),
+    path('player/api/', include(('accounts.api.urls', 'accountapi'), namespace='instance_name')),
 
     path('chat/',   	include('chat.urls', namespace='chatviews')),
     path('chat/api/',   include(('chat.api.urls', 'chatapi'), namespace='instance_name')),

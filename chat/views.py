@@ -12,13 +12,17 @@ from itertools import chain
 
 from db.models import Chatroom, Message, Follower, Subscriber
 from db.views import create_chatroom
+from accounts.utils import token_required
 
-@login_required(login_url='/admin/')
+#@login_required(login_url='accounts:login')
+
+@token_required
 def create(request):
+    print('\nCOOKIES: \n', request.COOKIES)
     context = {}
     return render(request, 'create.html', context)
 
-@login_required(login_url='/admin/')
+@login_required(login_url='accounts:login')
 def feed(request):
 	username 	= request.user.username
 	user 		= User.objects.get(username=username)
@@ -41,54 +45,54 @@ def feed(request):
 	}
 	return render(request, 'feed.html', context) 
 
-@login_required(login_url='/admin/')
-def room(request, room_name):
-	array 		= []
-	msg_array 	= []
-	queryset 	= []
+@login_required(login_url='accounts:login')
+def room(request, name):
+    array       = []
+    msg_array 	= []
+    queryset 	= []
 
-	currentuser = request.user.username
-	is_owner 	= False
-	is_follower = False
-	is_subscriber = False
+    currentuser = request.user.username
+    is_owner 	= False
+    is_follower = False
+    is_subscriber = False
 
-	USERlogged 		= User.objects.get(username=currentuser)
-	CHATROOM 		= Chatroom.objects.get(chatroom_name=room_name)
-	USERowner 		= User.objects.get(username=CHATROOM.author)
+    USERlogged 		= User.objects.get(username=currentuser)
+    CHATROOM 		= Chatroom.objects.get(chatroom_name=name)
+    USERowner 		= User.objects.get(username=CHATROOM.author)
 
-	followerREL 	= Follower.objects.filter(user_follower=USERlogged)
-	subscriberREL 	= Subscriber.objects.filter(follower_subscriber=USERlogged)
+    followerREL 	= Follower.objects.filter(user_follower=USERlogged)
+    subscriberREL 	= Subscriber.objects.filter(follower_subscriber=USERlogged)
 
-	for each in followerREL:
-		if(each.followed_user == USERowner):
-			print('the current user is follower of the current chat')
-			is_follower = True
+    for each in followerREL:
+        if(each.followed_user == USERowner):
+            print('the current user is follower of the current chat')
+            is_follower = True
 
-	for each in subscriberREL:
-		if(each.subscribed_use == USERowner):
-			print('the current user is subscriber of the current chat')
-			is_subscriber = False
+    for each in subscriberREL:
+        if(each.subscribed_use == USERowner):
+            print('the current user is subscriber of the current chat')
+            is_subscriber = False
 
-	for each in Chatroom.objects.all():
-		array.append(each.chatroom_name)
+    for each in Chatroom.objects.all():
+        array.append(each.chatroom_name)
 
-	if not (room_name in array):
-		return redirect('chatapp:feed')
+    if not (name in array):
+        return redirect('chatapp:feed')
 
-	for each in Message.objects.all():
-		if each.chatroom == 'chat_'+ room_name:
-			msg_array.append(each)
+    for each in Message.objects.all():
+        if each.chatroom == 'chat_'+ name:
+            msg_array.append(each)
 
-	chatroom 	= Chatroom.objects.get(chatroom_name=room_name)
-	author 		= chatroom.author
+    chatroom 	= Chatroom.objects.get(chatroom_name=name)
+    author 		= chatroom.author
 
-	if (currentuser == author):
-		is_owner = True
+    if (currentuser == author):
+        is_owner = True
 
-	context = {	'room__name':room_name,
-				'messages':msg_array,
-				'is_owner':is_owner,
-				'is_follower':is_follower,
-		}
+    context = {	'room__name':name,
+                'messages':msg_array,
+                'is_owner':is_owner,
+                'is_follower':is_follower,
+    }
 
-	return render(request, 'chatroom.html', context)
+    return render(request, 'chatroom.html', context)
