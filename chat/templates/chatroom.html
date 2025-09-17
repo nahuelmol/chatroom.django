@@ -3,7 +3,6 @@
 <head>
 	<meta charset="uft-8">	
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
@@ -97,7 +96,6 @@
 							{{ request.user.email|json_script:"user-email"}}
 						</div>
 						<p>{{ room__name }}</p>
-
 						<div>
 
 							{% if is_owner %}
@@ -111,23 +109,15 @@
 							{% endif %}
 
 							{% if is_follower %}
-
     							<input id="subsbtn" type="button" value="Subscribe"><br><br>
-
 							{% else %}
-
     							<input id="followbtn" type="button" value="Follow"><br><br>
-
 							{% endif %}
-
 							{% if is_subcriber %}
 								<input id="donarsubbtn" type="button" value="Donar subs">
-								
 							{% endif %}
-					
 						</div>
 					</div>
-					
 				</div>
  				<div class="col">
  					
@@ -149,7 +139,6 @@
 								{{ each.creation_date }}
 								<br>
 							{% endfor %}
-						
 							</div></br>
 							<input id="input" type="text" size="30"></br>
 							<input id="submit" type="button" value="Send">
@@ -161,11 +150,9 @@
  				{% if is_owner %}
  				<div class="col ">
  					<div class="text-center">Banner</div>
- 					
  					<div class="jumbotron">
  						<p>Below you can ban someone in the chat, put his name here</p>
  					</div>
-
  					<div class="container">
  						<input id="usertoban" type="text" name="User">
  						<input id="submitban" type="button" value="Ban">
@@ -178,7 +165,6 @@
  					</div>
  				</div>
  				{% endif %}
-
 			</div>
 		</div>
 		<div><p id="welcomemsg"></p></div>
@@ -188,8 +174,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 	<script type="text/javascript">
-	var local_host 	= window.location.host;
-	var red_host 	= '192.168.1.38:3000';
+	var host = window.location.host;
+    console.log('local host: ' + host)
+	//var red_host 	= '192.168.1.38:3000';
 
 	const roomName 		=JSON.parse(document.getElementById('room-name').textContent);
 	const user_username =JSON.parse(document.getElementById('user-username').textContent);
@@ -269,7 +256,8 @@
 	
 
 	const chatSocket 	= new WebSocket(
-		'ws://'+ red_host + '/ws/chat/'+ roomName + '/');
+		'ws://'+ host + '/ws/chat/'+ roomName + '/');
+		//'ws://'+ red_host + '/ws/chat/'+ roomName + '/');
 	
 	chatSocket.onmessage = function (e){
 

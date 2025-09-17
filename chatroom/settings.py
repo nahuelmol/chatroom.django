@@ -9,13 +9,25 @@ DEBUG = True
 
 SESSION_COOKIE_DOMAIN = None  # usa el dominio exacto del request
 
-ALLOWED_HOSTS = ['192.168.0.103','localhost','192.168.1.38', '192.168.1.40']
-CHANNELS_ALLOWED_HOSTS = ['localhost', '192.168.1.38', '192.168.1.40']
+ALLOWED_HOSTS = [
+        '192.168.0.103',
+        'localhost',
+        '192.168.1.38', 
+        '192.168.1.40',
+        '192.168.1.37',
+        ]
+CHANNELS_ALLOWED_HOSTS = [
+        'localhost', 
+        '192.168.1.38', 
+        '192.168.1.40',
+        '192.168.1.37',
+        ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  # Agrega tu dirección IP o nombre de dominio aquí
     "http://192.168.1.38:3000",
     "http://192.168.1.40:8080",
+    "https://192.168.1.37:8080",
 ]
 
 INSTALLED_APPS = [
@@ -67,6 +79,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chatroom.wsgi.application'
 ASGI_APPLICATION = 'chatroom.routing.application'
+
+#SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 DATABASES = {
     'default': {
