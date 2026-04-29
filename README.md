@@ -9,10 +9,19 @@
 
 The goal is to create a workspace where team members can communicate and stay connected for the sake of an efective workflow.
 
-### Tests
+## Tools
 
-I followed the generic way for django. Type in command line:
+Uvicorn and Daphne are possible to use on Windows:
+
+* Uvicorn
+  
+```
+uvicorn chatroom.asgi:application --host 127.0.0.1 --port 8000
+```
+ 
+* Daphne
 
 ```
-python manage.py test mytests
+daphne -b 127.0.0.1 -p 8000 chatroom.asgi:application
 ```
+  
