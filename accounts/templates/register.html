@@ -8,7 +8,7 @@
 <body>
 	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
   		<div class="container-fluid">
-    			<a class="navbar-brand" href="{% url 'chatapp:profile' %}">Profile</a>
+    			<a class="navbar-brand" href="{% url 'accounts:profile' %}">Profile</a>
     			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       			<span class="navbar-toggler-icon"></span>
     			</button>
@@ -17,29 +17,29 @@
                 {% if user %}
 
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:logout' %}">Logout</a>
+                    <a class="nav-link" href="{% url 'accountapi:logout' %}">Logout</a>
                   </li>
 
                 {% else %}
 
                   <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'chatapp:profile' %}">Login
+                    <a class="nav-link active" href="{% url 'accounts:login' %}">Login
                     <span class="visually-hidden">{{ user }}</span>
                     </a>
                   </li>
 
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:register' %}">Register</a>
+                    <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
                   </li>
 
                 {% endif %}
                 
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:feed' %}">Feed</a>
+                    <a class="nav-link" href="{% url 'chatviews:feed' %}">Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapp:explore' %}">Explore</a>
+                    <a class="nav-link" href="{% url 'chatviews:explore' %}">Explore</a>
                 </li>
                 
               </ul>
@@ -62,7 +62,7 @@
 
 	<div class="container p-5 text-center">
 		<h3>Start your registration</h3>
-		<form action="{% url 'saver:register' %}" method="post">
+		<form action="{% url 'accountapi:register' %}" method="post">
 			{% csrf_token %}
 			<br>
 			<label>Title:</label><br>

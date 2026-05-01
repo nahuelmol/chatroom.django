@@ -20,6 +20,10 @@ def about(request):
     context = {}
     return render(request, 'about.html', context)
 
+def register(request):
+    context = {}
+    return render(request, 'register.html', context)
+
 @token_required
 def create(request):
     context = {}
@@ -100,3 +104,8 @@ def room(request, name):
     }
 
     return render(request, 'chatroom.html', context)
+
+def explore(request):
+    context = {}
+    return render(request, 'explore.html', context) 
+
