@@ -4,7 +4,12 @@
 
 /chat/__pycache__
 /chat/api/__pycache__
+
 /chatroom/__pycache__
+
+/accounts/__pycache__
+/accounts/api/__pycache__
+
 /comparator/__pycache__
 /db/__pycache__
 

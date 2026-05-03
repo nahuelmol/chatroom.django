@@ -31,10 +31,8 @@ def findowner(owner):
 		return None
 
 class SaveFollower(APIView):
-	authentication_classes = [
-		authentication.TokenAuthentication]
-	permission_classes = [
-		permissions.AllowAny]
+	authentication_classes = [ authentication.TokenAuthentication ]
+	permission_classes = [ permissions.AllowAny ]
 
 	def post(self, request, room_name):
 		userid 		= request.data.get('id')
@@ -46,10 +44,9 @@ class SaveFollower(APIView):
 		today 		= datetime.datetime.now()
 		
 		new_follower = Follower(
-			followed_user=owner,
-			user_follower=follower,
-			date_follow=today)
-
+			                followed_user=owner,
+			                user_follower=follower,
+			                date_follow=today)
 		try:
 			new_follower.save()
 			return JsonResponse({'mensaje': 'following successful'})
@@ -62,11 +59,8 @@ class SaveFollower(APIView):
 				return JsonResponse({'mensaje': 'following successful'})
 
 class SaveSubscriber(APIView):
-
-	authentication_classes = [
-		authentication.TokenAuthentication]
-	permission_classes = [
-		permissions.AllowAny]
+	authentication_classes  = [ authentication.TokenAuthentication ]
+	permission_classes      = [ permissions.AllowAny ]
 
 	def post(self, request, room_name):
 		userid 		= request.data.get('id')
@@ -135,5 +129,5 @@ class SaveChatroom(APIView):
 
     def get(self, request):
         messages.add_message(request, messages.INFO, 'get request arent allowed')
-        return redirect('chatapp:create')
+        return redirect('chatapi:create')
 

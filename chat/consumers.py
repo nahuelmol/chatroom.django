@@ -11,7 +11,6 @@ from comparator.generator import BanningPeople, ModeratingPeople
 
 from asgiref.sync import sync_to_async
 
-
 class Word:
 	def __init__(self, word):
 		self._word = word
@@ -43,7 +42,6 @@ word = Word(' ')
 class ChatRoomConsumer(AsyncWebsocketConsumer):
 
 	async def connect(self):
-		
 		my_counter.more()
 		my_counter.monitor()
 
@@ -98,12 +96,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		await self.channel_layer.group_send(self.room_group_name, obj)
 
 	async def chatroom_message(self, event):
-
 		message 		= event['message_event'] #we collect the message event from the group (inside of receive function)
 		user_username 	= event['username_event'] #we collect the username too
 		time_message 	= event['time_event']
-
-
 
 		if message[0] == '#':
 			
@@ -118,33 +113,23 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 					msg = Msgsender('looser', user_username, time_message, word_msg)
 					print('failed!')
 
-
 				await self.send(text_data=json.dumps(msg))
-
 			else:
 				msg = Msgsender('empty', user_username, time_message, word._word)
 				await self.send(text_data=json.dumps(msg))
 
 		elif message[0] == '!':
-
 			frase 	= message.replace('!',"")
-
-			msg = command(word, user_username, frase, time_message)
+			msg     = command(word, user_username, frase, time_message)
 
 			await self.send(text_data=json.dumps(msg))
 
 		elif message[0] == '@':
-
 			which  = message.replace('@', "")
-
 			if which == 'ban':
-
 				msg = await BanningPeople(user_username, time_message)
-
 			if which == 'mod':
-
 				msg = await ModeratingPeople(user_username, time_message)
-
 			await self.send(text_data=json.dumps(msg))
 
 		else:

@@ -17,9 +17,8 @@ def register(request):
 	user 	= request.user
 	if user.is_authenticated:
 		context = {
-			'userdata': 'you need to be logged out',
+			'userdata': 'you have to be logged out',
 		}
-
 		return render(request, 'register.html', context)
 	
 	context = {
