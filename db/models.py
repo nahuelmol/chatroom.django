@@ -2,22 +2,19 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Chatroom(models.Model):
-
 	chatroom_name 	= models.CharField(max_length=30)
 	creation_date  	= models.CharField(max_length=30)
 	author			= models.CharField(max_length=30)
 	link_to_join 	= models.CharField(max_length=30) 	
-
-	asunto 			= models.CharField(	max_length=30,
+	asunto 			= models.CharField(max_length=30,
 										default='conversation')
-	description 	= models.TextField(	max_length=60,
+	description 	= models.TextField(max_length=60,
 										default='a normal conversation')
 
 	def __str__(self):
 		return 'Nothing'
 
 class Encuesta(models.Model):
-
 	date_created		= models.DateField()
 	deadline 			= models.DateField()
 
@@ -26,7 +23,6 @@ class Encuesta(models.Model):
 	vote_count 			= models.IntegerField()
 
 class Follower(models.Model):
-
 	date_follow			= models.DateField()
 	user_follower 		= models.ForeignKey(
 											User, 
@@ -39,9 +35,7 @@ class Follower(models.Model):
 											related_name='follow_to')
 
 class Subscriber(models.Model):
-
 	date_subs			= models.DateField()
-	
 	follower_subscriber	= models.ForeignKey(
 											User, 
 											on_delete=models.CASCADE,
@@ -53,7 +47,6 @@ class Subscriber(models.Model):
 	
 class Moderator(models.Model):
 	date_conversion		= models.DateField()
-
 	user_moderator		= models.ForeignKey(
 										User, 
 										on_delete=models.CASCADE,
@@ -62,20 +55,15 @@ class Moderator(models.Model):
 										User,
 										on_delete=models.CASCADE,
 										related_name='moderate_to')
-	
-
 
 class Event(models.Model):
-
 	class PrivacyEvent(models.TextChoices):
 		private = 'private'
 		public  = 'public'
 
 	name				= models.CharField(max_length=30)
-
 	date_created		= models.IntegerField()
 	date_to_launch		= models.IntegerField()
-
 	description     	= models.TextField(max_length=60)
 	link_to_join    	= models.CharField(max_length=30)
 	solicitudes_to_join = models.IntegerField()
@@ -85,7 +73,6 @@ class Event(models.Model):
 											default='unknown')
 
 class Post(models.Model):
-
 	name			= models.CharField(max_length=30)
 	user_owner		= models.ForeignKey(User, on_delete=models.CASCADE)
 	date_created	= models.IntegerField()
@@ -95,7 +82,6 @@ class Post(models.Model):
 	time_shared     = models.IntegerField()
 
 class Comment(models.Model):
-
 	name			= models.CharField(max_length=30)
 	user_owner		= models.ForeignKey(User, on_delete=models.CASCADE)
 	date_created	= models.IntegerField()

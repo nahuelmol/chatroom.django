@@ -12,6 +12,7 @@
 
 /comparator/__pycache__
 /db/__pycache__
+/db/api/__pycache__
 
 /chat/migrations/
 /chatroom/migrations/
