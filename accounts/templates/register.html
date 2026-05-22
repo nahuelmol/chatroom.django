@@ -64,11 +64,14 @@
 		<form action="{% url 'accountapi:register' %}" method="post">
 			{% csrf_token %}
 			<br>
-			<label>Title:</label><br>
-			   	<input type="text" name="username"/><br>
-        			<input type="text" name="email"/><br>
-			   	<input type="text" name="password1"><br>
-        			<input type="text" name="password2"><br>
+			<label>Username:</label>
+			<input type="text" name="username"/><br>
+			<label>Email:</label>
+        		<input type="text" name="email"/><br>
+			<label>Password:</label>
+			<input type="text" name="password1"><br>
+			<label>Password Again:</label>
+        		<input type="text" name="password2"><br>
 			<button class="btn" type="submit">Register</button>
 		</form>
 	</div>

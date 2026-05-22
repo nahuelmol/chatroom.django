@@ -175,7 +175,7 @@
 
 	<script type="text/javascript">
 	var host = window.location.host;
-    console.log('local host: ' + host)
+    	console.log('host: ' + host)
 	//var red_host 	= '192.168.1.38:3000';
 
 	const roomName 		= JSON.parse(document.getElementById('room-name').textContent);
@@ -184,22 +184,31 @@
 
 	input = document.querySelector('#input');
 
-	input.addEventListener("keyup", function(event) {
-            // Verifica si la tecla presionada es "Enter" (código 13)
-            if (event.keyCode === 13) {
-                // Dispara el evento de clic en el botón
+	const chatSocket 	= new WebSocket(
+		'ws://'+ host + '/ws/chat/'+ roomName + '/');
+		//'ws://'+ red_host + '/ws/chat/'+ roomName + '/');
+
+	chatSocket.onopen = function() {
+    		console.log("WEBSOCKET OPEN")
+	}
+
+	chatSocket.onclose = function(e) {
+	    console.log("SOCKET CLOSED", e)
+	}
+
+	input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en el input
+            if (event.keyCode === 13) { //enter tiene codigo 13
             	const messageInputDom 	= document.querySelector('#input');
-				const message 			= messageInputDom.value;
+		const message = messageInputDom.value;
 
-				chatSocket.send(JSON.stringify({
-					'message':message,
-					'username':user_username,
-					'email':user_email
-				}));
-
-				messageInputDom.value = '';
+		chatSocket.send(JSON.stringify({
+			'message':message,
+			'username':user_username,
+			'email':user_email
+		}));
+		messageInputDom.value = '';
             }
-    });
+    	});
 
 	document.querySelector('#submit').onclick = function (e) {
 		const messageInputDom 	= document.querySelector('#input');
@@ -214,12 +223,12 @@
 		messageInputDom.value = '';
 	}
 
-    var followbtn = document.querySelector('#follwbtn')
-    if (followbtn){
-        followbtn.onclick = function (e) {
-            console.log('hello')
-        }
-    }
+	var followbtn = document.querySelector('#follwbtn')
+	if (followbtn){
+		followbtn.onclick = function (e) {
+		    console.log('hello')
+		}
+	}
 
 	var submitban = document.querySelector('#submitban');
 	if (submitban) {
@@ -234,7 +243,7 @@
 			}))
 
 			input.value = '';
-    	}
+    		}
 	}
 
 	var submitmod = document.querySelector('#submitmod')
@@ -255,9 +264,6 @@
 	}
 	
 
-	const chatSocket 	= new WebSocket(
-		'ws://'+ host + '/ws/chat/'+ roomName + '/');
-		//'ws://'+ red_host + '/ws/chat/'+ roomName + '/');
 	
 	chatSocket.onmessage = function (e){
 
