@@ -11,7 +11,7 @@ The goal is to create a workspace where team members can communicate and stay co
 
 ## Tools
 
-Uvicorn and Daphne are possible to use on Windows:
+Uvicorn and Daphne are possible to use on Windows and Linux:
 
 * Uvicorn
   
