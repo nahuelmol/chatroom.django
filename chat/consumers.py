@@ -95,54 +95,53 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 		await self.channel_layer.group_send(self.room_group_name, obj)
 
 	async def chatroom_message(self, event):
-		message 		= event['message_event'] #we collect the message event from the group (inside of receive function)
+		message 	= event['message_event'] #we collect the message event from the group (inside of receive function)
 		user_username 	= event['username_event'] #we collect the username too
 		time_message 	= event['time_event']
 
-        try:
-            if message[0] == '#':
-                if word._word != ' ':
-                    word_msg = message.replace('#',"")
-                    res = compare_message(word_msg, word._word)
+        	if message[0] == '#':
+            	    	if word._word != ' ':
+                		word_msg = message.replace('#',"")
+                		res = compare_message(word_msg, word._word)
 
-                    if res:
-                        msg = Msgsender('winner', user_username, time_message, word._word)
-                        print('well done!')
-                    else:
-                        msg = Msgsender('looser', user_username, time_message, word_msg)
-                        print('failed!')
+                		if res:
+                    			msg = Msgsender('winner', user_username, time_message, word._word)
+                    			print('well done!')
+                		else:
+                    			msg = Msgsender('looser', user_username, time_message, word_msg)
+                    			print('failed!')
 
-                    await self.send(text_data=json.dumps(msg))
-                else:
-                    msg = Msgsender('empty', user_username, time_message, word._word)
-                    await self.send(text_data=json.dumps(msg))
+                		await self.send(text_data=json.dumps(msg))
+        		else:
+        	    		msg = Msgsender('empty', user_username, time_message, word._word)
+            		
+			await self.send(text_data=json.dumps(msg))
 
-            elif message[0] == '!':
-                frase 	= message.replace('!',"")
-                msg     = command(word, user_username, frase, time_message)
+        	elif message[0] == '!':
+            		frase 	= message.replace('!',"")
+            		msg     = command(word, user_username, frase, time_message)
+            		await self.send(text_data=json.dumps(msg))
 
-                await self.send(text_data=json.dumps(msg))
+        	elif message[0] == '@':
+            		which  = message.replace('@', "")
+            		if which == 'ban':
+                	msg = await BanningPeople(user_username, time_message)
+            		if which == 'mod':
+                	msg = await ModeratingPeople(user_username, time_message)
+            		await self.send(text_data=json.dumps(msg))
 
-            elif message[0] == '@':
-                which  = message.replace('@', "")
-                if which == 'ban':
-                    msg = await BanningPeople(user_username, time_message)
-                if which == 'mod':
-                    msg = await ModeratingPeople(user_username, time_message)
-                await self.send(text_data=json.dumps(msg))
+        	else:
+            		msg = await chatting(user_username, time_message, message)
+            		await self.send(text_data=json.dumps(msg))
 
-            else:
-                msg = await chatting(user_username, time_message, message)
-                await self.send(text_data=json.dumps(msg))
+        	people = {
+            		'countered':my_counter._count
+        	}
 
-            people = {
-                'countered':my_counter._count
-            }
-
-            await self.send(text_data=json.dumps(people))
+        	await self.send(text_data=json.dumps(people))
         
-     except Exception as e:
-            print("CHATROOM ERROR:", e)
+    #except Exception as e:
+    #        print("CHATROOM ERROR:", e)
 
 	###########################################################
 	pass
