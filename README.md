@@ -7,7 +7,12 @@
 
 ## Goal
 
-The goal is to create a workspace where team members can communicate and stay connected for the sake of an efective workflow.
+The goal is to create a workspace where team members can communicate for an efective workflow.
+
+## Used tools
+
+* django-channels
+* 
 
 ## Tools
 
