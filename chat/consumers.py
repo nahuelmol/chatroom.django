@@ -54,7 +54,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             self.channel_name
             )
         await self.accept()
-
         await self.channel_layer.group_send(self.room_group_name,
             {   'type':'welcome_message',
                 'tester':'Welcome to the Chat Room',
@@ -91,13 +90,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'message_event':message,
             'username_event':username,
             'time_event':time}
-        await self.channel_layer.group_send(self.room_group_name, obj)
 
+        await self.channel_layer.group_send(self.room_group_name, obj)
     
     async def chatroom_message(self, event):
-        message     = event['message_event'] #we collect the message event from the group (inside of receive function)
+        message         = event['message_event'] #we collect the message event from the group (inside of receive function)
         user_username   = event['username_event'] #we collect the username too
         time_message    = event['time_event']
+        msg = ''
         if message[0] == '#':
             if word._word != ' ':
                 word_msg = message.replace('#',"")
@@ -108,11 +108,8 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 else:
                     msg = Msgsender('looser', user_username, time_message, word_msg)
                     print('failed!')
-
-                await self.send(text_data=json.dumps(msg))
             else:
                 msg = Msgsender('empty', user_username, time_message, word._word)
-                    
             await self.send(text_data=json.dumps(msg))
 
         elif message[0] == '!':
@@ -132,6 +129,16 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
             await self.send(text_data=json.dumps(msg))
 
+        else:
+            print("message:" + message)
+            print("username:" + user_username)
+            msg = {
+                'type':'chat_msg',
+                'message':message,
+                'username':user_username,
+                'time':time_message
+            }
+            await self.send(text_data=json.dumps(msg))
 
         people = {
             'countered':my_counter._count

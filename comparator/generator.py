@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from django.contrib.auth.models import User
 
 def compare_message(word, WORD_TO_GUESS):
-
 	if word == WORD_TO_GUESS:
 		return True
 	else:
@@ -16,7 +15,6 @@ def compare_message(word, WORD_TO_GUESS):
 
 def word_generator():
 	load_dotenv()
-
 	apikey 		= os.environ.get('WORD_API_KEY')
 	max_length	= str(8)
 	min_length	= str(5)
@@ -31,14 +29,11 @@ def word_generator():
 		
 		if req.status_code == 200:
 			result = json.loads(req.content)[0]['word']
-
 			return result
 
 	except Exception as e:
-		
 		final = '\nit is immposible to create a connection\nword not generated'
 		return final
-
 
 def Msgsender(message, username, time, word):
 	msgcontent = ''
@@ -72,17 +67,12 @@ def Msgsender(message, username, time, word):
 		'time_of_message':time,
 		'type':typemsg
 	}
-
 	return msg
 
 async def ModeratingPeople(username, time):
-
 	admin = 0
-
 	msg_group = "the user " + username + " should be a moderator!"
-
 	print(msg_group)
-
 	obj = {
 		'admin':admin,
 		'message_to_group':msg_group,
@@ -90,17 +80,12 @@ async def ModeratingPeople(username, time):
 		'time_of_message':time,
 		'type':'modded'
 	}
-
 	return obj
 
 async def BanningPeople(username, time):
-
 	admin = 0
-
 	msg_group = "the user " + username + " should be banned!"
-
 	print(msg_group)
-
 	obj = {
 		'admin':admin,
 		'message_to_group':msg_group,
@@ -108,14 +93,11 @@ async def BanningPeople(username, time):
 		'time_of_message':time,
 		'type':'banned'
 	}
-
 	return obj
-
 
 async def chatting(username, time, msg):
 	admin 	= 0 
 	user 	= await sync_to_async(User.objects.get)(username=username)
-	
 	if user:
 		if user.is_staff:
 			print(user.username + ' is admin')
@@ -133,23 +115,17 @@ async def chatting(username, time, msg):
 		'time_of_message':time,
 		'type':'chat_msg'
 	}
-
 	return obj
 
 def command(word, user, frase, time):
-
 	msgcontent = ''
 	pabs 	= frase.split()[:1]
 	cmd 	= pabs[0]
-
 	typemsg = ''
-
 	if cmd == 'generate':
 		msgcontent = 'lets try to guess the word'
-
 		WORD_TO_GUESS = word_generator()
 		word.change(WORD_TO_GUESS)
-
 		print("the word is ", WORD_TO_GUESS)
 		typemsg = 'game_noti'
 
@@ -176,7 +152,5 @@ def command(word, user, frase, time):
 		'time_of_message':time,
 		'type':typemsg
 	}
-
-
 	return msg
 	
