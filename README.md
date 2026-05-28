@@ -12,7 +12,7 @@ The goal is to create a workspace where team members can communicate for an efec
 ## Used tools
 
 * django-channels
-* 
+* whitenoise 
 
 ## Tools
 

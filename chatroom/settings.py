@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'chatroom.urls'
@@ -115,7 +116,13 @@ USE_L10N        = True
 
 USE_TZ          = True
 
-STATIC_URL      = '/static/'
+STATIC_URL      = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CHANNEL_LAYERS  = {
     "default":{ "BACKEND":"channels.layers.InMemoryChannelLayer"}
