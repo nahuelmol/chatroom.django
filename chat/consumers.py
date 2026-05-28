@@ -75,13 +75,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
     ######################################################################
     async def receive(self, text_data):
-        text_data_json  = json.loads(text_data)
-        result          = datetime.datetime.now()
+        json_data   = json.loads(text_data)
+        now         = datetime.datetime.now()
 
-        message         = text_data_json['message']
-        username        = text_data_json['username']
-        email           = text_data_json['email']
-        time            = str(result.hour) +':'+str(result.minute)
+        print(json_data)
+        message         = json_data['message']
+        username        = json_data['username']
+        email           = json_data['email']
+        time            = str(now.hour) +':'+str(now.minute)
 
         await create_message(message, username, self.room_group_name, time)
 

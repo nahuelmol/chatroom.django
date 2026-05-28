@@ -4,6 +4,11 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from drf_spectacular.views import (
+        SpectacularAPIView,
+        SpectacularSwaggerView,
+)
+
 from accounts.api.views import LoginView
 
 schema_view = get_schema_view(
@@ -28,4 +33,10 @@ urlpatterns = [
 
     path('db/', 		include('db.api.urls')),
     path('swagger/', 	schema_view.with_ui('swagger', cache_timeout=0), name='schema-swg-ui'),
+
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/',
+         SpectacularSwaggerView.as_view(url_name='schema'),
+         name='swagger-ui',
+    ),
 ]

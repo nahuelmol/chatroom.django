@@ -1,0 +1,21 @@
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.success {
+    color: #198754;
+    font-weight: bold;
+}
+
+.warning {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.info {
+    color: #0dcaf0;
+    font-weight: bold;
+}
+

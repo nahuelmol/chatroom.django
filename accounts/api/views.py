@@ -1,4 +1,7 @@
 from django.contrib.auth import authenticate
+from django.contrib import messages
+from django.contrib.auth import login
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -26,10 +29,13 @@ class LoginView(APIView):
     def post(self, request, format=None):
         u_name 	= request.data.get('username')
         p_word 	= request.data.get('password')
+        print(u_name)
+        print(p_word)
         headers = request.META
 
         user 	= authenticate(username=u_name, password=p_word)
         if user:
+            login(request, user)
             user_access_token = generate_access_token(user)
             if user_access_token:
                 response = redirect('chatviews:create')
@@ -42,8 +48,8 @@ class LoginView(APIView):
             return response
         else:
             print('user does not exists')
+            messages.error(request, "Cannot log in: user does not exists")
             response = redirect('accounts:login')
-            #response.status_code = 400
             return response
 
 class RegisterView(APIView):
@@ -59,7 +65,7 @@ class RegisterView(APIView):
         exists_byusern  = User.objects.filter(username=username_)
         exists_byemail  = User.objects.filter(email=email_)
         if exists_byusern or exists_byemail:
-            print('Record already exists, try to login')
+            messages.error(request, 'Record already exists, try to login')
             response = redirect('accounts:login')
             return response
 
@@ -68,6 +74,7 @@ class RegisterView(APIView):
         new_user.save()
 
         if new_user:
+            login(request, new_user)
             access_token = generate_access_token(new_user)
             if access_token:
                 response = redirect('chatviews:create')
@@ -90,7 +97,7 @@ class UserLogout(APIView):
         user_token  = request.COOKIES.get('access_token', None)
         headers 	= request.META
         if user_token:
-            response = redirect('chatviews:login')
+            response = redirect('accounts:login')
             response.delete_cookie('access_token')
             return response
         else:
