@@ -32,7 +32,6 @@ class LoginView(APIView):
         print(u_name)
         print(p_word)
         headers = request.META
-
         user 	= authenticate(username=u_name, password=p_word)
         if user:
             login(request, user)
@@ -60,7 +59,7 @@ class RegisterView(APIView):
         headers 	= request.META
         username_ 	= request.data.get('username')
         email_ 		= request.data.get('email')
-        pass_ 		= request.data.get('password')
+        pass_ 		= request.data.get('password1')
 
         exists_byusern  = User.objects.filter(username=username_)
         exists_byemail  = User.objects.filter(email=email_)
@@ -72,7 +71,6 @@ class RegisterView(APIView):
         new_user = User(email=email_, username=username_)
         new_user.set_password(pass_)
         new_user.save()
-
         if new_user:
             login(request, new_user)
             access_token = generate_access_token(new_user)
