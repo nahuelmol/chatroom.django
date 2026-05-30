@@ -12,7 +12,12 @@ The goal is to create a workspace where team members can communicate for an efec
 ## Used tools
 
 * django-channels
-* whitenoise 
+* whitenoise : serves static files 
+        - Daphne receives the HTTP request.
+        - WhiteNoise interpretes URLs that start with STATIC_URL.
+        - WhiteNoise read the files from STATIC_ROOT.
+        - WhiteNoise returns the content with the right MIME.
+        - Daphne sends the response to the browser.
 
 ## Tools
 
