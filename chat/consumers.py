@@ -77,12 +77,10 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         json_data   = json.loads(text_data)
         now         = datetime.datetime.now()
-
-        print(json_data)
-        message         = json_data['message']
-        username        = json_data['username']
-        email           = json_data['email']
-        time            = str(now.hour) +':'+str(now.minute)
+        message     = json_data['message']
+        username    = json_data['username']
+        email       = json_data['email']
+        time        = str(now.hour) +':'+str(now.minute)
 
         await create_message(message, username, self.room_group_name, time)
 
@@ -131,8 +129,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps(msg))
 
         else:
-            print("message:" + message)
-            print("username:" + user_username)
             msg = {
                 'type':'chat_msg',
                 'message':message,
@@ -147,8 +143,5 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps(people))
         
-    #except Exception as e:
-    #        print("CHATROOM ERROR:", e)
-
     ###########################################################
     pass

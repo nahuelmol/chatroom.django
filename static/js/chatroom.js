@@ -117,14 +117,34 @@ chatSocket.onmessage = function (e){
             break;
         }
         case 'chat_msg': {
-            let username 	= '\n'+data.username
-            role = ''
-            document.querySelector('#chattext-2').innerHTML	+= (
-                '<br>'+username+role+
-                '<br>'+data.message+
-                '<br>'+data.time+'<br>');
+            role = '';
+            let msg_element = document.createElement("div");
+            msg_element.className = "message";
+            msg_element.style.margin = "5";
 
-            document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
+            let usr_element = document.createElement("p");
+            let txt_element = document.createElement("p");
+            let tme_element = document.createElement("p");
+            usr_element.style.margin = "0";
+            txt_element.style.margin = "0";
+            tme_element.style.margin = "0";
+            usr_element.textContent = data.username;
+            txt_element.textContent = data.message;
+            tme_element.textContent = data.time;
+
+            msg_element.appendChild(usr_element);
+            msg_element.appendChild(txt_element);
+            msg_element.appendChild(tme_element);
+
+            document.querySelector('#chattext-2').appendChild(msg_element);
+
+            //  document.querySelector('#chattext-2').innerHTML	+= (
+            //  '<p><br>'+username+role+
+            //  '<br>'+data.message+
+            //  '<br>'+data.time+'<br></p>');
+
+            //document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
+            
             break;
         }
     }

@@ -29,8 +29,6 @@ class LoginView(APIView):
     def post(self, request, format=None):
         u_name 	= request.data.get('username')
         p_word 	= request.data.get('password')
-        print(u_name)
-        print(p_word)
         headers = request.META
         user 	= authenticate(username=u_name, password=p_word)
         if user:
