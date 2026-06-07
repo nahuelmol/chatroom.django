@@ -14,7 +14,7 @@ The goal is to create a workspace where team members can communicate for an efec
 * django-channels
 * whitenoise : serves static files 
 
-This is the Workflow:
+This is the Workflow:  
         - Daphne receives the HTTP request.
         - WhiteNoise interpretes URLs that start with STATIC_URL.
         - WhiteNoise read the files from STATIC_ROOT.
