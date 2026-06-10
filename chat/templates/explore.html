@@ -21,7 +21,7 @@
                 {% if user %}
 
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'chatapi:logout' %}">Logout</a>
+                    <a class="nav-link" href="{% url 'accountapi:logout' %}">Logout</a>
                   </li>
 
                 {% else %}
@@ -65,7 +65,7 @@
 	</div>
 
 	<div>
-		<a href="{% url 'chatapp:feed' %}">My Feed</a>
+		<a href="{% url 'chatviews:feed' %}">My Feed</a>
 	</div>
 
 	

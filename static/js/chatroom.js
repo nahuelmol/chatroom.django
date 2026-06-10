@@ -83,7 +83,6 @@ if (submitmod) {
     }
 }
 
-
 chatSocket.onmessage = function (e){
     const data 		= JSON.parse(e.data);
     if(data.hasOwnProperty('tester')){

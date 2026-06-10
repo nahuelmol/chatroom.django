@@ -74,42 +74,30 @@
 
 	<div class="container p-5 text-center">
 		<h3>Let's start a chat</h3>
-		<form action="{% url 'saver:chatrooms' %}" method="post">
+        <form action="{% url 'chatapi:save' %}" method="post">
 			{% csrf_token %}
-			<br>
-			<label>Title:</label><br>
-			<input type="text" name="chatname"/><br>
-			<input type="hidden" name="username" value="{{ user.username }}">
-			
-			<button type="submit">Crear chat</button>
-			
+			<label>Chatname:</label><br>
+            <input type="text" name="chatname"/><br>
+			<button class="btn" type="submit">Create</button>
 		</form>
 	</div>
-	<a href="{% url 'chatapp:feed' %}">Explore</a>
+	<a href="{% url 'chatviews:feed' %}">Explore</a>
 
-  <script type="text/javascript">
-      
+    <script type="text/javascript">
+        var btnLinks = document.querySelectorAll('.btnlink');
+        btnLinks.forEach(function(btnLink) {
+            btnLink.addEventListener('click', function (e) {
+                var container = e.target.closest('.container');
+                var chatname  = container.querySelector('#chatname').textContent;
+                var listLink  = container.querySelector('#listlink');
 
-      var btnLinks = document.querySelectorAll('.btnlink');
-
-      btnLinks.forEach(function(btnLink) {
-        btnLink.addEventListener('click', function (e) {
-
-
-          var container = e.target.closest('.container');
-          console.log(container)
-
-          var chatName = container.querySelector('#chatname').textContent;
-          var listLink = container.querySelector('#listlink');
-
-          if (chatName) {
-            var url = "{% url 'chatapp:room' room_name='placeholder' %}".replace('placeholder', chatName);
-            window.location.href = url;
-          }
+                if (chatName) {
+                    console.log(chatname)
+                    window.location.href = `/room/${encodeURIComponent(chatname)}/`;
+                    window.location.href = url;
+                }
+            });
         });
-      });
-
-  </script>
-	
+    </script>
 </body>
 </html>
