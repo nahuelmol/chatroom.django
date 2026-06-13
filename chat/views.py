@@ -105,6 +105,11 @@ def room(request, name):
 
     return render(request, 'chatroom.html', context)
 
+@token_required
+def noti(request, name):
+    print('nothing happen')
+    pass
+
 def explore(request):
     context = {}
     return render(request, 'explore.html', context) 

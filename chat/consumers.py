@@ -145,3 +145,26 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         
     ###########################################################
     pass
+
+
+class NotificationConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+    async def disconnect(self, close_code):
+    async def receive(self, text_data):
+        json_data   = json.loads(text_data)
+        now         = datetime.datetime.now()
+        message     = json_data['message']
+        username    = json_data['username']
+        email       = json_data['email']
+        time        = str(now.hour) +':'+str(now.minute)
+
+        await create_message(message, username, self.room_group_name, time)
+
+        obj = {
+            'type':'chatroom_message',
+            'message_event':message,
+            'username_event':username,
+            'time_event':time}
+
+        await self.channel_layer.group_send(self.room_group_name, obj)
+    pass
