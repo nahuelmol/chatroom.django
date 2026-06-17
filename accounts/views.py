@@ -35,33 +35,33 @@ def profile(request):
 	username 	= request.user.username
 	user 		= User.objects.get(username=username)
 	followers 	= Follower.objects.filter(followed_user=user) #user como seguido
-	followeds 	= Follower.objects.filter(user_follower=user) #user como seguidor
+	following 	= Follower.objects.filter(user_follower=user) #user como seguidor
 	chats 		= Chatroom.objects.filter(author=username)
 
 	users_followers = []
-	users_followeds = []
+	users_following = []
 
 	for follower in followers:
 		ufwer = follower.user_follower
 		users_followers.append(ufwer)
-	for followed in followeds:
-		ufwed = followed.followed_user
-		users_followeds.append(ufwed)
+	for followin in following:
+		ufwin = followin.followed_user
+		users_following.append(ufwin)
 
 	amountFollowers = followers.count()
-	amountFolloweds = followeds.count()
+	amountFollowing = following.count()
 	amountChatrooms = chats.count()
 
 	fwers_list 	= followers.all()
-	fweds_list 	= followeds.all()
+	fweds_list 	= following.all()
 
 	context  = {
 		'userdata': user,
 		'followers':amountFollowers,
-		'followeds':amountFolloweds,
+		'followeds':amountFollowing,
 		'chatrooms':amountChatrooms,
-		'fds_list':users_followeds,
 		'frs_list':users_followers,
+		'fds_list':users_following,
 	}
 	return render(request, 'profile.html', context) 
 
