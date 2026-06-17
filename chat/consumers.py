@@ -97,6 +97,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         user_username   = event['username_event'] #we collect the username too
         time_message    = event['time_event']
         msg = ''
+        if len(message) == 0:
+            print('message is not valid')
+            return
         if message[0] == '#':
             if word._word != ' ':
                 word_msg = message.replace('#',"")
@@ -149,7 +152,11 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        print('connected to notification consumer')
+
     async def disconnect(self, close_code):
+        print('disconnected')
+
     async def receive(self, text_data):
         json_data   = json.loads(text_data)
         now         = datetime.datetime.now()

@@ -7,15 +7,24 @@ const user_email	= JSON.parse(document.getElementById('user-email').textContent)
 
 input = document.querySelector('#input');
 
-const chatSocket 	= new WebSocket(
-    'ws://'+ host + '/ws/chat/'+ roomName + '/');
+const chatSocket 	= new WebSocket('ws://'+ host + '/ws/chat/'+ roomName + '/');
+
+const notificationSocket = new WebSocket('ws://' + host + '/ws/notifications/');
 
 chatSocket.onopen = function() {
-    console.log("WEBSOCKET OPEN")
+    console.log("CHAT WEBSOCKET OPEN")
 }
 
 chatSocket.onclose = function(e) {
-    console.log("SOCKET CLOSED", e)
+    console.log("CHAT WEBSOCKET CLOSED", e)
+}
+
+chatSocket.onopen = function() {
+    console.log("NOTIFICATIONS WEBSOCKET OPEN")
+}
+
+chatSocket.onclose = function(e) {
+    console.log("NOTIFICATIONS WEBSOCKET CLOSED", e)
 }
 
 
