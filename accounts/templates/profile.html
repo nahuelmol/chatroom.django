@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,61 +47,43 @@
                   </li>
 
                 {% endif %}
-        				
-        				
        					<li class="nav-item">
           					<a class="nav-link" href="{% url 'chatviews:feed' %}">Feed</a>
         				</li>
         				<li class="nav-item">
           					<a class="nav-link" href="{% url 'chatviews:explore' %}">Explore</a>
         				</li>
-        				
       				</ul>
-      				
     			</div>
   		</div>
 	</nav>
 
-	<div class="container">
-
-    <p><dt>Followers: </dt>{{ followers }}</p> 
-    <p><dt>Following: </dt>{{ folloqing }}</p>
-    <p><dt>Chatrooms: </dt>{{ chatrooms }}</p>
-		
-	</div>
-
-  <div class="container">
-    <button class="btn btn-primary" id="follower_show">Show Followers</button>
-    <div id="follower_seccion" class="hidden">
-      {% for fwer in frs_list %}
-        <div class="container p-3 bg-primary text-white">
-          <p><dt>{{ fwer.username }}</dt></p>
+    <div class="container">
+        <button class="btn btn-primary" id="chatroom_show"><p>Chatrooms: {{ chatrooms }}</p></button>
+        <div id="chatroom_section" class="hidden">
+          {% for chat in chat_lst %}
+            <div class="container p-3 bg-primary text-white">
+              <p><dt>{{ chat }}</dt></p>
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-
-    <button class="btn btn-primary" id="followed_show">Show Followeds</button>
-    <div id="followed_seccion" class="hidden">
-      {% for fwed in fds_list %}
-        <div class="container p-3 bg-primary text-white">
-          <p><dt>{{ fwed.username }}</dt></p>
+        <button class="btn btn-primary" id="follower_show"><p>Followers: {{ followers }}</p></button>
+        <div id="follower_section" class="hidden">
+          {% for fwer in frs_list %}
+            <div class="container p-3 bg-primary text-white">
+              <p><dt>{{ fwer.username }}</dt></p>
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
+        <button class="btn btn-primary" id="following_show"><p>Following: {{ following }}</p></button>
+        <div id="following_section" class="hidden">
+        {% for fwed in fds_list %}
+            <div class="container p-3 bg-primary text-white">
+            <p><dt>{{ fwed.username }}</dt></p>
+            </div>
+        {% endfor %}
+        </div>
     </div>
-  </div>
-
-  <script>
-    document.getElementById('follower_show').addEventListener('click', function() {
-        var seccion = document.getElementById('follower_seccion');
-        seccion.style.display = (seccion.style.display === 'none' || seccion.style.display === '') ? 'block' : 'none';
-    });
-
-    document.getElementById('followed_show').addEventListener('click', function() {
-        var seccion = document.getElementById('followed_seccion');
-        seccion.style.display = (seccion.style.display === 'none' || seccion.style.display === '') ? 'block' : 'none';
-    });
-</script>
-
-
+    <script type="text/javascript" src="{% static 'js\profile.js' %}"></script>
 </body>
 </html>

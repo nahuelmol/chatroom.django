@@ -55,13 +55,17 @@ def profile(request):
 	fwers_list 	= followers.all()
 	fweds_list 	= following.all()
 
+    for each in chats:
+        print(each)
+
 	context  = {
 		'userdata': user,
 		'followers':amountFollowers,
-		'followeds':amountFollowing,
+		'following':amountFollowing,
 		'chatrooms':amountChatrooms,
 		'frs_list':users_followers,
 		'fds_list':users_following,
+        'chat_lst':chats,
 	}
 	return render(request, 'profile.html', context) 
 
