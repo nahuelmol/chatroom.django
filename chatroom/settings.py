@@ -15,6 +15,7 @@ ALLOWED_HOSTS = [
         '192.168.1.38', 
         '192.168.1.40',
         '192.168.1.37',
+        '192.168.10.107',
         ]
 CHANNELS_ALLOWED_HOSTS = [
         'localhost', 

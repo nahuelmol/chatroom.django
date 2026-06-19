@@ -77,20 +77,42 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         json_data   = json.loads(text_data)
         now         = datetime.datetime.now()
-        message     = json_data['message']
-        username    = json_data['username']
-        email       = json_data['email']
         time        = str(now.hour) +':'+str(now.minute)
 
-        await create_message(message, username, self.room_group_name, time)
 
-        obj = {
-            'type':'chatroom_message',
-            'message_event':message,
-            'username_event':username,
-            'time_event':time}
 
-        await self.channel_layer.group_send(self.room_group_name, obj)
+        if "type" in json_data:
+            if json_data["type"] == "typing":
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                        {
+                            "type": "typing_event",
+                            "typing": json_data["typing"],
+                            "username": self.scope["user"].username,
+                        })
+
+            elif json_data["type"] == "message":
+                message     = json_data['message']
+                username    = json_data['username']
+                email       = json_data['email']
+
+                await create_message(message, username, self.room_group_name, time)
+
+                obj = {
+                    'type':'chatroom_message',
+                    'message_event':message,
+                    'username_event':username,
+                    'time_event':time}
+                await self.channel_layer.group_send(self.room_group_name, obj)
+            else:
+                print("not recognized type")
+
+    async def typing_event(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "typing",
+            "username": event["username"],
+            "typing": event["typing"],
+        }))
     
     async def chatroom_message(self, event):
         message         = event['message_event'] #we collect the message event from the group (inside of receive function)

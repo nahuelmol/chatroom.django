@@ -4,6 +4,7 @@ var host = window.location.host;
 const roomName 		= JSON.parse(document.getElementById('room-name').textContent);
 const user_username = JSON.parse(document.getElementById('user-username').textContent);
 const user_email	= JSON.parse(document.getElementById('user-email').textContent);
+const typingLabel   = document.getElementById("typing-label");
 
 input = document.querySelector('#input');
 
@@ -27,13 +28,13 @@ chatSocket.onclose = function(e) {
     console.log("NOTIFICATIONS WEBSOCKET CLOSED", e)
 }
 
-
 input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en el input
     if (event.keyCode === 13) { //enter tiene codigo 13
         const messageInputDom 	= document.querySelector('#input');
         const message = messageInputDom.value;
 
         chatSocket.send(JSON.stringify({
+            'type':'message',
             'message':message,
             'username':user_username,
             'email':user_email
@@ -42,10 +43,44 @@ input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en
     }
 });
 
+let timeout;
+let isTyping = false;
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.type === "typing") {
+        if (data.typing) {
+            typingLabel.innerHTML =
+                `${data.username} está escribiendo...`;
+        } else {
+            typingLabel.innerHTML = "";
+        }
+    }
+}
+
+input.addEventListener("input", () => {
+    if (!isTyping) {
+        chatSocket.send(JSON.stringify({
+            type: "typing",
+            typing: true
+        }));
+        isTyping = true;
+    }
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        chatSocket.send(JSON.stringify({
+            type: "typing",
+            typing: false
+        }));
+        isTyping = false;
+    }, 2000);
+});
+
 document.querySelector('#submit').onclick = function (e) {
     const messageInputDom 	= document.querySelector('#input');
     const message 			= messageInputDom.value;
     chatSocket.send(JSON.stringify({
+        'type':'message',
         'message':message,
         'username':user_username,
         'email':user_email
@@ -67,6 +102,7 @@ if (submitban) {
         const usertoban = input.value;
 
         chatSocket.send(JSON.stringify({
+            'type':'message',
             'message':'@ban',
             'username':usertoban,
             'email':user_email
@@ -83,6 +119,7 @@ if (submitmod) {
         const usertomod = input.value;
 
         chatSocket.send(JSON.stringify({
+            'type':'message',
             'message':'@mod',
             'username':usertomod,
             'email':user_email
