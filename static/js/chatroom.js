@@ -8,9 +8,9 @@ const typingLabel   = document.getElementById("typing-label");
 
 input = document.querySelector('#input');
 
-const chatSocket 	= new WebSocket('ws://'+ host + '/ws/chat/'+ roomName + '/');
+const chatSocket 	    = new WebSocket('ws://'+ host + '/ws/chat/'+ roomName + '/');
 
-const notificationSocket = new WebSocket('ws://' + host + '/ws/notifications/');
+const notificationSocket= new WebSocket('ws://' + host + '/ws/notifications/');
 
 chatSocket.onopen = function() {
     console.log("CHAT WEBSOCKET OPEN")
@@ -167,6 +167,10 @@ chatSocket.onmessage = function (e){
             msg_element.className = "message";
             msg_element.style.margin = "5";
 
+            let invite_element = document.createElement("button");
+            invite_element = className = "invitebtn"
+            invite_element.style.margin = "5";
+
             let usr_element = document.createElement("p");
             let txt_element = document.createElement("p");
             let tme_element = document.createElement("p");
@@ -182,6 +186,7 @@ chatSocket.onmessage = function (e){
             msg_element.appendChild(tme_element);
 
             document.querySelector('#chattext-2').appendChild(msg_element);
+            document.querySelector('#chattext-2').appendChild(invite_element);
 
             //  document.querySelector('#chattext-2').innerHTML	+= (
             //  '<p><br>'+username+role+
@@ -189,7 +194,6 @@ chatSocket.onmessage = function (e){
             //  '<br>'+data.time+'<br></p>');
 
             //document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
-            
             break;
         }
     }
@@ -241,7 +245,7 @@ var subsbtn = document.querySelector('#subsbtn');
 if(subsbtn) {
     subsbtn.onclick = function (e) {
         var room = '{{ room__name|urlencode }}'
-        var usuario = { id: '{{ user.id }}', username: '{{ user.username}}'};
+        var usuario = { id: '{{ user.id }}', username: '{{ user.username }}'};
         var url = "{% url 'chatapi:subs' name='placeholder' %}".replace('placeholder', room);
         requesting_to_back(url, usuario) 
     }
@@ -254,3 +258,12 @@ $(document).ready(function() {
     }
 });
 
+var invitation = document.querySelector("#invitebtn");
+if(invitation) {
+    invitation.onclick = function(e) {
+        socket.send(JSON.stringify({
+            type: "invite_user",
+            user_id: 15
+        }));
+    }
+}

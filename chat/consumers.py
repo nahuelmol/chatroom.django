@@ -180,20 +180,33 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         print('disconnected')
 
     async def receive(self, text_data):
-        json_data   = json.loads(text_data)
+        data        = json.loads(text_data)
         now         = datetime.datetime.now()
-        message     = json_data['message']
-        username    = json_data['username']
-        email       = json_data['email']
+        message     = data['message']
+        username    = data['username']
+        email       = data['email']
         time        = str(now.hour) +':'+str(now.minute)
 
-        await create_message(message, username, self.room_group_name, time)
+        if data["type"] == "invite_user":
+            await channel_layer.group_send(
+                f"user_{user_b.id}",
+                {
+                    "type": "chat_invitation",
+                    "chat_id": self.chat.id,
+                    "chat_name": self.chat.name,
+                    "from": self.scope["user"].username,
+                }
+            )
+        else:
+            print("not inviting")
 
-        obj = {
-            'type':'chatroom_message',
-            'message_event':message,
-            'username_event':username,
-            'time_event':time}
+    async def chat_invitation(self, event):
 
-        await self.channel_layer.group_send(self.room_group_name, obj)
+        await self.send(text_data=json.dumps({
+            "type": "chat_invitation",
+            "chat_id": event["chat_id"],
+            "chat_name": event["chat_name"],
+            "from": event["from"],
+        }))
+
     pass
