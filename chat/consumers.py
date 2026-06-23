@@ -79,8 +79,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         now         = datetime.datetime.now()
         time        = str(now.hour) +':'+str(now.minute)
 
-
-
         if "type" in json_data:
             if json_data["type"] == "typing":
                 await self.channel_layer.group_send(
@@ -98,14 +96,15 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
                 await create_message(message, username, self.room_group_name, time)
 
-                obj = {
-                    'type':'chatroom_message',
-                    'message_event':message,
-                    'username_event':username,
-                    'time_event':time}
+                obj = { 'type':'chatroom_message',
+                        'message_event':message,
+                        'username_event':username,
+                        'time_event':time}
                 await self.channel_layer.group_send(self.room_group_name, obj)
             else:
                 print("not recognized type")
+        else:
+            print("message has not type")
 
     async def typing_event(self, event):
         await self.send(text_data=json.dumps({
@@ -175,6 +174,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         print('connected to notification consumer')
+        await self.accept()
 
     async def disconnect(self, close_code):
         print('disconnected')
