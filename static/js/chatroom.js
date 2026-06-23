@@ -4,12 +4,11 @@ var host = window.location.host;
 const roomName 		= JSON.parse(document.getElementById('room-name').textContent);
 const user_username = JSON.parse(document.getElementById('user-username').textContent);
 const user_email	= JSON.parse(document.getElementById('user-email').textContent);
-const typingLabel   = document.getElementById("typing-label");
+const typingLabel   = document.getElementById("typing-label-text");
 
 input = document.querySelector('#input');
 
 const chatSocket 	    = new WebSocket('ws://'+ host + '/ws/chat/'+ roomName + '/');
-
 const notificationSocket= new WebSocket('ws://' + host + '/ws/notifications/');
 
 chatSocket.onopen = function() {
@@ -29,7 +28,8 @@ chatSocket.onclose = function(e) {
 }
 
 input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en el input
-    if (event.keyCode === 13) { //enter tiene codigo 13
+    if (event.keyCode === 13) {
+        typingLabel.innerHTML = ``;
         const messageInputDom 	= document.querySelector('#input');
         const message = messageInputDom.value;
 
@@ -46,18 +46,6 @@ input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en
 let timeout;
 let isTyping = false;
 
-chatSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    if (data.type === "typing") {
-        if (data.typing) {
-            typingLabel.innerHTML =
-                `${data.username} está escribiendo...`;
-        } else {
-            typingLabel.innerHTML = "";
-        }
-    }
-}
-
 input.addEventListener("input", () => {
     if (!isTyping) {
         chatSocket.send(JSON.stringify({
@@ -72,6 +60,8 @@ input.addEventListener("input", () => {
             type: "typing",
             typing: false
         }));
+
+        typingLabel.innerHTML = ``;
         isTyping = false;
     }, 2000);
 });
@@ -132,69 +122,66 @@ if (submitmod) {
 chatSocket.onmessage = function (e){
     const data 		= JSON.parse(e.data);
     if(data.hasOwnProperty('tester')){
-        console.log("Welcome!")
-        var prove = "<p>Hola, " + data.tester +"</p>"
+        console.log("Testing!");
+        var prove = "<p>Hellow, " + data.tester +"</p>"
         document.getElementById('handlebar1').innerHTML = prove;
     }
 
     if (data.hasOwnProperty('type')) {
-        console.log('type detected:' + data.type);
-    }
+        switch(data.type) {
+            case 'typing':
+                typingLabel.innerHTML = 
+                    `${data.username} está escribiendo...`;
+                break;
+            case 'game_noti':
+                resp = data.message_to_group
+                document.getElementById('handlebar1').innerHTML = resp;
+                break;
+            case 'word_suggest': {
+                let username 	= '\n'+data.user_username_ + ' suggested'
+                document.querySelector('#chat-text').value 		+= (data.message_to_group);
+                break;
+            }
+            case 'banned': {
+                let username 	= '\n'+data.user_username_ + ' banned'
+                document.querySelector('#chat-text').value 		+= (data.message_to_group);
+                break;
+            }
+            case 'modded': {
+                let username 	= '\n'+data.user_username_ + ' moderator'
+                document.querySelector('#chat-text').value 		+= (data.message_to_group);
+                break;
+            }
+            case 'chat_msg': {
+                role = '';
+                let msg_element = document.createElement("div");
+                msg_element.className = "message";
+                msg_element.style.margin = "5";
 
-    switch(data.type) {
-        case 'game_noti':
-            resp = data.message_to_group
-            document.getElementById('handlebar1').innerHTML = resp;
-            break;
-        case 'word_suggest': {
-            let username 	= '\n'+data.user_username_ + ' suggested'
-            document.querySelector('#chat-text').value 		+= (data.message_to_group);
-            break;
-        }
-        case 'banned': {
-            let username 	= '\n'+data.user_username_ + ' banned'
-            document.querySelector('#chat-text').value 		+= (data.message_to_group);
-            break;
-        }
-        case 'modded': {
-            let username 	= '\n'+data.user_username_ + ' moderator'
-            document.querySelector('#chat-text').value 		+= (data.message_to_group);
-            break;
-        }
-        case 'chat_msg': {
-            role = '';
-            let msg_element = document.createElement("div");
-            msg_element.className = "message";
-            msg_element.style.margin = "5";
+                let invite_element = document.createElement("button");
+                invite_element.className = "invitebtn"
+                invite_element.style.margin = "5";
 
-            let invite_element = document.createElement("button");
-            invite_element = className = "invitebtn"
-            invite_element.style.margin = "5";
+                let usr_element = document.createElement("p");
+                let txt_element = document.createElement("p");
+                let tme_element = document.createElement("p");
+                usr_element.style.margin = "0";
+                txt_element.style.margin = "0";
+                tme_element.style.margin = "0";
+                usr_element.textContent = data.username;
+                txt_element.textContent = data.message;
+                tme_element.textContent = data.time;
 
-            let usr_element = document.createElement("p");
-            let txt_element = document.createElement("p");
-            let tme_element = document.createElement("p");
-            usr_element.style.margin = "0";
-            txt_element.style.margin = "0";
-            tme_element.style.margin = "0";
-            usr_element.textContent = data.username;
-            txt_element.textContent = data.message;
-            tme_element.textContent = data.time;
+                msg_element.appendChild(usr_element);
+                msg_element.appendChild(txt_element);
+                msg_element.appendChild(tme_element);
 
-            msg_element.appendChild(usr_element);
-            msg_element.appendChild(txt_element);
-            msg_element.appendChild(tme_element);
+                document.querySelector('#chattext-2').appendChild(msg_element);
+                document.querySelector('#chattext-2').appendChild(invite_element);
+                document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
 
-            document.querySelector('#chattext-2').appendChild(msg_element);
-            document.querySelector('#chattext-2').appendChild(invite_element);
-
-            //  document.querySelector('#chattext-2').innerHTML	+= (
-            //  '<p><br>'+username+role+
-            //  '<br>'+data.message+
-            //  '<br>'+data.time+'<br></p>');
-
-            //document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
-            break;
+                break;
+            }
         }
     }
 
@@ -227,7 +214,6 @@ const requesting_to_back = (url, usuario) => {
         console.error('Error:', error);
     });
 }
-
 
 var followbtn = document.querySelector('#followbtn');
 
