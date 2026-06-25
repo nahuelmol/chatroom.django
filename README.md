@@ -37,3 +37,4 @@ uvicorn chatroom.asgi:application --host 127.0.0.1 --port 8000
 daphne -b 127.0.0.1 -p 8000 chatroom.asgi:application
 ```
   
+In the case of deploying on LAN, ask for the local IP using ipconfig and replace 127.0.0.1 with it.
