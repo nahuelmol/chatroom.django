@@ -15,20 +15,21 @@ ALLOWED_HOSTS = [
         '192.168.1.38', 
         '192.168.1.40',
         '192.168.1.37',
-        '192.168.10.107',
+        '192.168.10.106',
         ]
 CHANNELS_ALLOWED_HOSTS = [
         'localhost', 
         '192.168.1.38', 
         '192.168.1.40',
         '192.168.1.37',
+        '192.168.10.106',
         ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",  # Agrega tu dirección IP o nombre de dominio aquí
+    "http://localhost:8000",
     "http://192.168.1.38:3000",
     "http://192.168.1.40:8080",
-    "https://192.168.1.37:8080",
+    "https://192.168.10.106:8000",
 ]
 
 INSTALLED_APPS = [

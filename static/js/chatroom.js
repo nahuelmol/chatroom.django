@@ -162,6 +162,14 @@ chatSocket.onmessage = function (e){
                 invite_element.className = "invitebtn"
                 invite_element.style.margin = "5";
 
+                invite_element.addEventListener("click", () => {
+                    chatSocket.send(JSON.stringify({
+                        type: "invite_user",
+                        user_id: 15
+                    }));
+                    console.log("sending invitation;")
+                });
+
                 let usr_element = document.createElement("p");
                 let txt_element = document.createElement("p");
                 let tme_element = document.createElement("p");
@@ -244,12 +252,3 @@ $(document).ready(function() {
     }
 });
 
-var invitation = document.querySelector("#invitebtn");
-if(invitation) {
-    invitation.onclick = function(e) {
-        socket.send(JSON.stringify({
-            type: "invite_user",
-            user_id: 15
-        }));
-    }
-}
