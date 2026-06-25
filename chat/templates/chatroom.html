@@ -54,24 +54,22 @@
     			</button>
     			<div class="collapse navbar-collapse" id="navbarColor02">
       				<ul class="navbar-nav me-auto">
-                {% if user %}
 
+                {% if user %}
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'accountapi:logout' %}">Logout</a>
                   </li>
-
                 {% else %}
                   <li class="nav-item">
                     <a class="nav-link active" href="{% url 'accounts:login' %}">Login
                     <span class="visually-hidden">{{ user }}</span>
                     </a>
                   </li>
-
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
                   </li>
-
                 {% endif %}
+
       				</ul>
     			</div>
   		</div>
@@ -105,7 +103,6 @@
 								<input id="addlinkbtn" type="button" value="Add link"><br><br>
 							{% else %}
     							<p>Enjoy the chat</p>
-
 							{% endif %}
 
 							{% if is_follower %}
@@ -113,6 +110,7 @@
 							{% else %}
     							<input id="followbtn" type="button" value="Follow"><br><br>
 							{% endif %}
+
 							{% if is_subcriber %}
 								<input id="donarsubbtn" type="button" value="Donar subs">
 							{% endif %}
@@ -123,7 +121,7 @@
  					<div class="columna">
 						<p>Chat</p>
                         <div id="typing-label">
-                            <p id="typing-label-text"></p>
+                            <p id="typing-label-text">..</p>
                         </div>
 						<div class="content">
 						</br>

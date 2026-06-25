@@ -109,13 +109,13 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     async def typing_event(self, event):
         await self.send(text_data=json.dumps({
             "type": "typing",
-            "username": event["username"],
             "typing": event["typing"],
+            "username": event["username"],
         }))
     
     async def chatroom_message(self, event):
-        message         = event['message_event'] #we collect the message event from the group (inside of receive function)
-        user_username   = event['username_event'] #we collect the username too
+        message         = event['message_event']
+        user_username   = event['username_event'] 
         time_message    = event['time_event']
         msg = ''
         if len(message) == 0:

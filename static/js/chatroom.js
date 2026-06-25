@@ -29,7 +29,7 @@ chatSocket.onclose = function(e) {
 
 input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en el input
     if (event.keyCode === 13) {
-        typingLabel.innerHTML = ``;
+        typingLabel.innerHTML = `..`;
         const messageInputDom 	= document.querySelector('#input');
         const message = messageInputDom.value;
 
@@ -60,10 +60,8 @@ input.addEventListener("input", () => {
             type: "typing",
             typing: false
         }));
-
-        typingLabel.innerHTML = ``;
         isTyping = false;
-    }, 2000);
+    }, 700);
 });
 
 document.querySelector('#submit').onclick = function (e) {
@@ -130,8 +128,11 @@ chatSocket.onmessage = function (e){
     if (data.hasOwnProperty('type')) {
         switch(data.type) {
             case 'typing':
-                typingLabel.innerHTML = 
-                    `${data.username} está escribiendo...`;
+                if(data.typing == true){
+                    typingLabel.innerHTML = `${data.username} está escribiendo...`;
+                } else {
+                    typingLabel.innerHTML = `..`;
+                }
                 break;
             case 'game_noti':
                 resp = data.message_to_group
