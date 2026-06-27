@@ -170,10 +170,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     ###########################################################
     pass
 
-
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print('connected to notification consumer')
+        self.user = self.scope["user"]
+
+        await self.channel_layer.group_add(
+            f"notifications_{self.user.id}",
+            self.channel_name
+        )
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -182,18 +186,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data        = json.loads(text_data)
         now         = datetime.datetime.now()
-        message     = data['message']
-        username    = data['username']
-        email       = data['email']
         time        = str(now.hour) +':'+str(now.minute)
 
         if data["type"] == "invite_user":
-            await channel_layer.group_send(
-                f"user_{user_b.id}",
+            await self.channel_layer.group_send(
+                f"notifications_{self.user.id}",
                 {
                     "type": "chat_invitation",
-                    "chat_id": self.chat.id,
-                    "chat_name": self.chat.name,
                     "from": self.scope["user"].username,
                 }
             )
@@ -201,11 +200,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             print("not inviting")
 
     async def chat_invitation(self, event):
-
         await self.send(text_data=json.dumps({
             "type": "chat_invitation",
-            "chat_id": event["chat_id"],
-            "chat_name": event["chat_name"],
             "from": event["from"],
         }))
 

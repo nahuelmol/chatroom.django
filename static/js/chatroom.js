@@ -8,7 +8,7 @@ const typingLabel   = document.getElementById("typing-label-text");
 
 input = document.querySelector('#input');
 
-const chatSocket 	    = new WebSocket('ws://'+ host + '/ws/chat/'+ roomName + '/');
+const chatSocket 	    = new WebSocket('ws://' + host + '/ws/chat/'+ roomName + '/');
 const notificationSocket= new WebSocket('ws://' + host + '/ws/notifications/');
 
 chatSocket.onopen = function() {
@@ -61,7 +61,7 @@ input.addEventListener("input", () => {
             typing: false
         }));
         isTyping = false;
-    }, 700);
+    }, 500);
 });
 
 document.querySelector('#submit').onclick = function (e) {
@@ -164,9 +164,9 @@ chatSocket.onmessage = function (e){
                 invite_element.style.margin = "5";
 
                 invite_element.addEventListener("click", () => {
-                    chatSocket.send(JSON.stringify({
-                        type: "invite_user",
-                        user_id: 15
+                    notificationSocket.send(JSON.stringify({
+                        type: "invite_user"
+                        //user_id: 15
                     }));
                     console.log("sending invitation;")
                 });
@@ -197,6 +197,12 @@ chatSocket.onmessage = function (e){
     if(data.hasOwnProperty('state')){
         document.getElementById('handlebar1').innerHTML = data.state;
     }
+}
+
+notificationSocket.onmessage = function(e) {
+    const data 		= JSON.parse(e.data);
+    console.log("response form the consumer;");
+    console.log(data);
 }
 
 const requesting_to_back = (url, usuario) => {
