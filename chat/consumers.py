@@ -78,16 +78,14 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         json_data   = json.loads(text_data)
         now         = datetime.datetime.now()
         time        = str(now.hour) +':'+str(now.minute)
+        obj         = None
 
         if "type" in json_data:
             if json_data["type"] == "typing":
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                        {
-                            "type": "typing_event",
-                            "typing": json_data["typing"],
-                            "username": self.scope["user"].username,
-                        })
+                obj = {
+                    "type": "typing_event",
+                    "typing": json_data["typing"],
+                    "username": self.scope["user"].username}
 
             elif json_data["type"] == "message":
                 message     = json_data['message']
@@ -100,9 +98,11 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                         'message_event':message,
                         'username_event':username,
                         'time_event':time}
-                await self.channel_layer.group_send(self.room_group_name, obj)
             else:
                 print("not recognized type")
+                obj = {}
+
+            await self.channel_layer.group_send(self.room_group_name, obj)
         else:
             print("message has not type")
 
@@ -148,7 +148,6 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 msg = await ModeratingPeople(user_username, time_message)
             else:
                 msg = await chatting(user_username, time_message, message)
-                await self.send(text_data=json.dumps(msg))
 
             await self.send(text_data=json.dumps(msg))
 
@@ -157,13 +156,10 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
                 'type':'chat_msg',
                 'message':message,
                 'username':user_username,
-                'time':time_message
-            }
+                'time':time_message}
             await self.send(text_data=json.dumps(msg))
 
-        people = {
-            'countered':my_counter._count
-        }
+        people = { 'countered':my_counter._count }
 
         await self.send(text_data=json.dumps(people))
         

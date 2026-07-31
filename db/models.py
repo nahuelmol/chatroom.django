@@ -35,7 +35,7 @@ class Follower(models.Model):
                                             on_delete=models.CASCADE,
                                             related_name='follow_to')
 
-class Subscriber(models.Model):
+class Suscriptor(models.Model):
     date_subs           = models.DateField()
     follower_subscriber = models.ForeignKey(
                                             User, 

@@ -12,7 +12,7 @@ from rest_framework import authentication
 
 from itertools import chain
 
-from db.models import Chatroom, Message, Follower, Subscriber
+from db.models import Chatroom, Message, Follower, Suscriptor
 from db.views import create_chatroom
 from accounts.utils import token_required
 
@@ -60,7 +60,7 @@ def room(request, name):
 
     is_owner 	= False
     is_follower = False
-    is_subscriber = False
+    is_suscriptor = False
 
     token = request.COOKIES.get("access_token")
     if token:
@@ -72,17 +72,17 @@ def room(request, name):
     USERowner 		= User.objects.get(username=CHATROOM.author)
 
     followerREL 	= Follower.objects.filter(user_follower=USERlogged)
-    subscriberREL 	= Subscriber.objects.filter(follower_subscriber=USERlogged)
+    suscriptorREL 	= Suscriptor.objects.filter(follower_subscriber=USERlogged)
 
     for each in followerREL:
         if(each.followed_user == USERowner):
-            print('the current user is follower of the current chat')
+            messages.success(req, 'Follower of the chat')
             is_follower = True
 
     for each in subscriberREL:
         if(each.subscribed_use == USERowner):
-            print('the current user is subscriber of the current chat')
-            is_subscriber = False
+            messages.success(req, 'suscriptor of the chat')
+            is_suscriptor = False
 
     for each in Chatroom.objects.all():
         array.append(each.chatroom_name)

@@ -58,7 +58,7 @@ class SaveFollower(APIView):
 			else:
 				return JsonResponse({'mensaje': 'following successful'})
 
-class SaveSubscriber(APIView):
+class SaveSuscriptor(APIView):
 	authentication_classes  = [ authentication.TokenAuthentication ]
 	permission_classes      = [ permissions.AllowAny ]
 
