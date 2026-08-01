@@ -89,7 +89,6 @@ class Comment(models.Model):
     date_to_launch  = models.IntegerField()
     description     = models.TextField(max_length=60)
     post            = models.ForeignKey(Post, on_delete=models.CASCADE)
-
     
 
 class Message(models.Model):
@@ -100,9 +99,12 @@ class Message(models.Model):
     chatroom        = models.CharField(max_length=30)
 
 class Notification(models.Model):
-    user        = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_to         = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_from       = models.ForeignKey(User, on_delete=models.CASCADE)
+    creation_date   = models.CharField(max_length=30)
+
     title       = models.CharField(max_length=100)
+    content     = models.CharField(max_length=100)
     message     = models.TextField()
     read        = models.BooleanField(default=False)
-    created_at  = models.DateTimeField(auto_now_add=True)
 

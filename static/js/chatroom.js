@@ -27,7 +27,7 @@ chatSocket.onclose = function(e) {
     console.log("NOTIFICATIONS WEBSOCKET CLOSED", e)
 }
 
-input.addEventListener("keyup", function(event) { //cada vez que hay un keyup en el input
+input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
         typingLabel.innerHTML = `..`;
         const messageInputDom 	= document.querySelector('#input');
@@ -203,6 +203,19 @@ notificationSocket.onmessage = function(e) {
     const data 		= JSON.parse(e.data);
     console.log("response form the consumer;");
     console.log(data);
+
+    if (data.hasOwnProperty('type')) {
+        switch(data.type) {
+            case 'notification': {
+                console.log("notification entering")
+                break;
+            }
+            default: {
+                console.log("not recognized data.type")
+                break;
+            }
+        }
+    }
 }
 
 const requesting_to_back = (url, usuario) => {

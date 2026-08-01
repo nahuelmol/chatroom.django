@@ -185,11 +185,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         time        = str(now.hour) +':'+str(now.minute)
 
         if data["type"] == "invite_user":
+            await create_notification("Invitation", "You were invited", user_to, self.user.username, time)
             await self.channel_layer.group_send(
                 f"notifications_{self.user.id}",
                 {
                     "type": "chat_invitation",
-                    "from": self.scope["user"].username,
+                    "from": self.user.username,
                 }
             )
         else:

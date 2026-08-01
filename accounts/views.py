@@ -11,7 +11,7 @@ from django import forms
 from rest_framework import authentication
 from itertools import chain
 
-from db.models import Chatroom, Message, Follower, Subscriber
+from db.models import Chatroom, Message, Follower, Suscriptor, Notification
 
 def register(request):
     user    = request.user

@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 
-from db.models import Chatroom, Follower, Subscriber
+from db.models import Chatroom, Follower, Suscriptor, Notification
 from db.forms import RegistrationForm
 
 from accounts.utils import token_required
