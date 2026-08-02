@@ -4,7 +4,7 @@ import datetime
 from channels.generic.websocket import AsyncWebsocketConsumer
 from comparator.generator import word_generator
 
-from db.views import create_message
+from db.views import create_message, create_notification
 from comparator.generator import compare_message, word_generator
 from comparator.generator import Msgsender, chatting, command
 from comparator.generator import BanningPeople, ModeratingPeople
@@ -185,12 +185,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         time        = str(now.hour) +':'+str(now.minute)
 
         if data["type"] == "invite_user":
-            await create_notification("Invitation", "You were invited", user_to, self.user.username, time)
+            await create_notification("Invitation", "You were invited", data["user_to"], self.user.username, time)
             await self.channel_layer.group_send(
                 f"notifications_{self.user.id}",
                 {
                     "type": "chat_invitation",
                     "from": self.user.username,
+                    "to":data["user_to"],
                 }
             )
         else:
@@ -200,6 +201,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "chat_invitation",
             "from": event["from"],
+            "to":event["to"],
         }))
 
     pass

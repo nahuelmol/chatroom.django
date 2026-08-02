@@ -72,14 +72,14 @@ def room(request, name):
     USERowner 		= User.objects.get(username=CHATROOM.author)
 
     followerREL 	= Follower.objects.filter(user_follower=USERlogged)
-    suscriptorREL 	= Suscriptor.objects.filter(follower_subscriber=USERlogged)
+    suscriptorREL 	= Suscriptor.objects.filter(follower_suscriptor=USERlogged)
 
     for each in followerREL:
         if(each.followed_user == USERowner):
             messages.success(req, 'Follower of the chat')
             is_follower = True
 
-    for each in subscriberREL:
+    for each in suscriptorREL:
         if(each.subscribed_use == USERowner):
             messages.success(req, 'suscriptor of the chat')
             is_suscriptor = False

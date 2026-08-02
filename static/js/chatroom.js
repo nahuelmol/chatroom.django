@@ -79,7 +79,7 @@ document.querySelector('#submit').onclick = function (e) {
 var followbtn = document.querySelector('#follwbtn')
 if (followbtn){
     followbtn.onclick = function (e) {
-        console.log('hello')
+        console.log('following')
     }
 }
 
@@ -163,10 +163,12 @@ chatSocket.onmessage = function (e){
                 invite_element.className = "invitebtn"
                 invite_element.style.margin = "5";
 
-                invite_element.addEventListener("click", () => {
+                invite_element.addEventListener("click", e => {
+                    let father  = e.target.parentElement;
+                    let usr     = father.querySelector("user_element_id");
                     notificationSocket.send(JSON.stringify({
-                        type: "invite_user"
-                        //user_id: 15
+                        type: "invite_user",
+                        user_to:usr,
                     }));
                     console.log("sending invitation;")
                 });
@@ -175,6 +177,7 @@ chatSocket.onmessage = function (e){
                 let txt_element = document.createElement("p");
                 let tme_element = document.createElement("p");
                 usr_element.style.margin = "0";
+                usr_element.id = "user_element_id";
                 txt_element.style.margin = "0";
                 tme_element.style.margin = "0";
                 usr_element.textContent = data.username;

@@ -2,6 +2,7 @@ from db.models import Message, Chatroom, Event, Suscriptor, Notification
 from asgiref.sync import sync_to_async
 import datetime
 
+from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 @sync_to_async
@@ -16,9 +17,11 @@ def create_message(message, username, chatroom, time):
 
 @sync_to_async
 def create_notification(title, content, user_to, user_from, time):
+    USERTO 		= User.objects.get(username=user_to)
+    USERFROM 	= User.objects.get(username=user_from)
     new_notification = Notification(
-        user_to     = user_to,
-        user_from   = user_from,
+        user_to     = USERTO,
+        user_from   = USERFROM,
         title       = title,
         content     = content,
 
