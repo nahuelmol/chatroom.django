@@ -95,7 +95,6 @@ class SaveChatroom(APIView):
         chat 	= request.POST.get('chatname')
         chats   = []
         chats   = Chatroom.objects.all()
-
         key     = request.COOKIES.get("access_token")
         token   = Token.objects.get(key=key)
         user    = token.user
@@ -112,7 +111,7 @@ class SaveChatroom(APIView):
             chatroom_name=chat,
             creation_date=time,
             author=user.username,
-            link_to_join=link,)
+            link_to_join=link)
 
         try:
             new_chat.save()

@@ -17,8 +17,12 @@ def create_message(message, username, chatroom, time):
 
 @sync_to_async
 def create_notification(title, content, user_to, user_from, time):
+    print(f"user_to = '{user_to}'")
+    print(f"user_from = '{user_from}'")
+
     USERTO 		= User.objects.get(username=user_to)
     USERFROM 	= User.objects.get(username=user_from)
+
     new_notification = Notification(
         user_to     = USERTO,
         user_from   = USERFROM,

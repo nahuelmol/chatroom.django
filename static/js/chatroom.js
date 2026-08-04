@@ -159,13 +159,13 @@ chatSocket.onmessage = function (e){
                 msg_element.className = "message";
                 msg_element.style.margin = "5";
 
-                let invite_element = document.createElement("button");
-                invite_element.className = "invitebtn"
-                invite_element.style.margin = "5";
+                let invite_button= document.createElement("button");
+                invite_button.className = "invitebtn"
+                invite_button.style.margin = "5";
 
-                invite_element.addEventListener("click", e => {
+                invite_button.addEventListener("click", e => {
                     let father  = e.target.parentElement;
-                    let usr     = father.querySelector("user_element_id");
+                    let usr     = father.querySelector("#user_element_id");
                     notificationSocket.send(JSON.stringify({
                         type: "invite_user",
                         user_to:usr,
@@ -178,18 +178,21 @@ chatSocket.onmessage = function (e){
                 let tme_element = document.createElement("p");
                 usr_element.style.margin = "0";
                 usr_element.id = "user_element_id";
-                txt_element.style.margin = "0";
-                tme_element.style.margin = "0";
                 usr_element.textContent = data.username;
+
+                txt_element.style.margin = "0";
                 txt_element.textContent = data.message;
+
+                tme_element.style.margin = "0";
                 tme_element.textContent = data.time;
 
                 msg_element.appendChild(usr_element);
                 msg_element.appendChild(txt_element);
                 msg_element.appendChild(tme_element);
+                msg_element.appendChild(invite_button);
 
                 document.querySelector('#chattext-2').appendChild(msg_element);
-                document.querySelector('#chattext-2').appendChild(invite_element);
+                //document.querySelector('#chattext-2').appendChild(invite_element);
                 document.querySelector('#chattext-2').scrollTop = document.querySelector('#chattext-2').scrollHeight;
 
                 break;
