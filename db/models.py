@@ -15,7 +15,7 @@ class Chatroom(models.Model):
     def __str__(self):
         return 'Nothing'
 
-class Encuesta(models.Model):
+class Poll(models.Model):
     date_created        = models.DateField()
     deadline            = models.DateField()
 

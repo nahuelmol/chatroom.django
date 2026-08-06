@@ -1,4 +1,4 @@
-from db.models import Message, Chatroom, Event, Suscriptor, Notification
+from db.models import Message, Chatroom, Event, Suscriptor, Notification, Poll
 from asgiref.sync import sync_to_async
 import datetime
 
@@ -35,8 +35,8 @@ def create_notification(title, content, user_to, user_from, time):
     new_notification.save()
 
 @sync_to_async
-def add_user_subscribed(req,chatroom,usubscribed,dsubscribed):
-    new_subscriber = Subscriber(
+def add_user_subscribed(chatroom, usubscribed, dsubscribed):
+    new_subscriber = Suscriptor(
         user_subscribed=usubscribed,
         creation_date=dsubscribed,
         chatroom=chatroom)
@@ -44,9 +44,11 @@ def add_user_subscribed(req,chatroom,usubscribed,dsubscribed):
     new_subscriber.save()
 
 @sync_to_async
-def encuesta():
+def encuesta(chatroom, username, options):
+    result          = datetime.datetime.now()
+    time            = str(result.hour) +':'+str(result.minute)
 
-    new_encuesta = Encuesta(
+    new_encuesta = Poll(
         author=username,
         options=options,
         creation_date=time,
@@ -55,19 +57,17 @@ def encuesta():
 
     new_encuesta.save()
 
-def create_event(username, chatroom, texto, time, deadline):
-
+def create_event(username, chatroom, text, time, deadline, location):
     result          = datetime.datetime.now()
     time            = str(result.hour) +':'+str(result.minute)
 
-
     new_event = Event(
         author=username,
-        content=texto,
+        content=text,
         creation_date=time,
         chatroom=chatroom,
         location=location,
-        is_invited=is_invited,
+        is_invited=False,
         deadline=deadline
         )
 
@@ -75,7 +75,6 @@ def create_event(username, chatroom, texto, time, deadline):
 
 
 def create_chatroom(chatroom_name,author):
-
     result          = datetime.datetime.now()
     time            = str(result.hour) +':'+str(result.minute)
     link            = "http://localhost:8000"+"/"+chatroom_name
